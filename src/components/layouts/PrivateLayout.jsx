@@ -1,17 +1,17 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AuthRedirect from "@/services/AuthRedirect";
 
 const PrivateLayout = ({ isAuthenticated }) => {
-  if (!isAuthenticated) {
-    return <AuthRedirect />;
-  }
+    if (!isAuthenticated) {
+        return null;
+    }
 
-  return (
-    <div className="private-layout">
-      <Outlet />
-    </div>
-  );
+    return (
+        <div className="private-layout">
+            <Outlet />
+        </div>
+    );
 };
 
 export default PrivateLayout;
+

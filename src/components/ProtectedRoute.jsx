@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 
 /**
  * ProtectedRoute - Component bảo vệ route khỏi user đã authenticated
- * Nếu user đã đăng nhập, sẽ redirect về /AIChatBoxWithEmo
- * Chỉ dành cho các route public như onboarding, login, signup
+ * Nếu user đã đăng nhập, sẽ redirect về /dashboard
+ * Chỉ dành cho các route public như login
  */
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/AIChatBoxWithEmo", { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

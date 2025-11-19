@@ -1,7 +1,6 @@
 // Service để khởi tạo authentication state từ localStorage
 import { store } from '../store';
 import { loginSuccess, logout } from '../store/authSlice';
-import { aliasPreferencesService, freeTrialService } from './apiService';
 
 // Decode JWT token
 const decodeJwt = (token) => {
@@ -92,11 +91,6 @@ export const initializeAuth = () => {
             user: userData,
             token: token
         }));
-
-        // Prefetch alias preferences to localStorage (non-blocking)
-        try { aliasPreferencesService.getPreferences().catch(() => { }); } catch { }
-
-        // Note: Free trial check is handled by AliasGuard to avoid duplicate calls
 
         return true;
     } catch (error) {

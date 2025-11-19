@@ -175,10 +175,10 @@ const LogIn = () => {
 
     // Do not clear persisted auth on page load to preserve login across refreshes
 
-    // If already authenticated via Redux, redirect to AIChatBoxWithEmo
+    // If already authenticated via Redux, redirect to dashboard
     if (isAuthenticated) {
       setAuthCheckCompleted(true);
-      navigate("/");
+      navigate("/dashboard");
       return;
     }
 
@@ -204,7 +204,7 @@ const LogIn = () => {
               token: token,
             })
           );
-          navigate("/");
+          navigate("/dashboard");
           return;
         }
       } catch (error) {
@@ -293,7 +293,7 @@ const LogIn = () => {
           })
         );
       } catch { }
-      navigate("/");
+      navigate("/dashboard");
     } finally {
       dispatch(setCheckingAlias(false));
     }
@@ -376,12 +376,12 @@ const LogIn = () => {
         );
       } catch { }
 
-      // Navigate to home
-      navigate("/");
+      // Navigate to dashboard
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error updating user with alias:", error);
-      // Fallback: navigate to home even if alias update fails
-      navigate("/");
+      // Fallback: navigate to dashboard even if alias update fails
+      navigate("/dashboard");
     }
   };
 
@@ -405,7 +405,7 @@ const LogIn = () => {
         })
       );
     } catch { }
-    navigate("/");
+    navigate("/dashboard");
   };
 
   // --- Google Identity Services (GIS) setup ---
