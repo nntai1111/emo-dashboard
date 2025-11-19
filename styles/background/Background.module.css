@@ -1,0 +1,48 @@
+/* .heroBackground {
+  width: 100%;
+  min-height: 200vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #181f4d;
+  background: linear-gradient(
+    180deg,
+    #181f4d 12%,
+    rgba(30, 38, 87, 1) 28%,
+    rgba(47, 57, 110, 1) 44%,
+    rgba(87, 81, 148, 1) 60%,
+    rgba(116, 92, 181, 1) 69%,
+    rgba(173, 152, 214, 1) 86%,
+    rgba(215, 211, 237, 1) 96%,
+    rgba(255, 255, 255, 1) 100%
+  );
+} */
+
+.heroBackground {
+  width: 100%;
+  min-height: 100vh; /* đủ để hiển thị, sẽ cao theo nội dung */
+  /* Layered backgrounds: image on top, gradient behind */
+  background-image: url("/image/home/bg_layout_top.webp"),
+    linear-gradient(
+      180deg,
+      #181f4d 12%,
+      rgba(30, 38, 87, 1) 28%,
+      rgba(47, 57, 110, 1) 44%,
+      rgba(87, 81, 148, 1) 60%,
+      rgba(116, 92, 181, 1) 69%,
+      rgba(173, 152, 214, 1) 86%,
+      rgba(215, 211, 237, 1) 96%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  background-repeat: no-repeat, no-repeat;
+  /* Lớp ảnh vừa chiều ngang, giữ tỉ lệ (không phóng to để phủ chiều cao) */
+  background-size: 100% auto, 100% 100%;
+  background-position: top center, top center;
+}
+
+.content {
+  color: white;
+  max-width: 800px;
+  padding: 2rem;
+}

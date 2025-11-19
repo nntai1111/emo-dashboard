@@ -1,0 +1,509 @@
+@media screen and (max-width: 991px) {
+  .customized-timeline .p-timeline-event:nth-child(even) {
+    flex-direction: row !important;
+  }
+  .customized-timeline
+    .p-timeline-event:nth-child(even)
+    .p-timeline-event-content {
+    text-align: left !important;
+  }
+  .customized-timeline .p-timeline-event-opposite {
+    flex: 0;
+  }
+  .customized-timeline .p-card {
+    margin-top: 1rem;
+  }
+}
+
+/* Root spacing */
+.customized-timeline-root {
+  --line-color: linear-gradient(
+    to bottom,
+    transparent,
+    #e5e7eb 20%,
+    transparent
+  );
+  --accent: #8b5cf6;
+}
+
+/* PrimeReact timeline line override to be more subtle */
+.customized-timeline .p-timeline-event-opposite {
+  min-width: 8rem;
+  color: #6b7280;
+}
+.customized-timeline .p-timeline-event-connector {
+  background: linear-gradient(to bottom, #e5e7eb 0%, #cbd5e1 100%);
+}
+
+/* Each node takes ~50% viewport height */
+.customized-timeline .p-timeline-event {
+  min-height: 50vh;
+  align-items: center; /* vertically center opposite + content */
+}
+.customized-timeline .p-timeline-event-content,
+.customized-timeline .p-timeline-event-opposite {
+  display: flex;
+  align-items: center;
+}
+
+/* Add spacing between content and center line */
+.customized-timeline .p-timeline-event-content {
+  justify-content: flex-end; /* content side to the right */
+}
+.customized-timeline .p-timeline-event-opposite {
+  justify-content: center; /* center the opposite (image) side */
+}
+.content-wrapper {
+  padding-left: 2.5rem; /* space from center line */
+}
+.opposite .opposite-media {
+  margin-right: 0; /* center opposite media by removing offset */
+}
+
+/* Default right-side card width override for larger screens */
+.customized-timeline .content-card {
+  max-width: clamp(28rem, 40vw, 44rem);
+}
+
+/* Below 1280px wide (but above tablet), tighten sizes for better balance */
+@media (max-width: 1279px) and (min-width: 992px) {
+  .customized-timeline .p-timeline-event {
+    min-height: 46vh;
+  }
+  .content-wrapper {
+    padding-left: 2rem;
+  }
+  .customized-timeline .content-card {
+    /* allow a bit more width vs the 28rem default, but cap to viewport */
+    max-width: min(520px, 46vw);
+  }
+  .opposite .opposite-media-square {
+    /* reduce square a touch so it fits visually with the card */
+    width: min(34vh, 28vw);
+    height: min(34vh, 28vw);
+  }
+  /* Scale headline to avoid overflow in this range */
+  .customized-timeline-root .font-fantasy {
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+  }
+}
+
+/* Narrow desktop (≈1024px–1100px): tighten a bit further */
+@media (max-width: 1100px) and (min-width: 992px) {
+  .customized-timeline .content-card {
+    max-width: min(500px, 48vw);
+  }
+  .opposite .opposite-media-square {
+    width: min(32vh, 26vw);
+    height: min(32vh, 26vw);
+  }
+}
+
+/* Short viewports: prioritize vertical fit */
+@media (max-height: 800px) and (min-width: 992px) {
+  .customized-timeline .p-timeline-event {
+    min-height: 44vh;
+  }
+  .opposite .opposite-media-square {
+    width: min(30vh, 28vw);
+    height: min(30vh, 28vw);
+  }
+  .customized-timeline-root .desc {
+    font-size: 0.98rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 991px) {
+  .content-wrapper {
+    padding-left: 1.25rem;
+  }
+  .opposite .opposite-media {
+    margin-right: 1rem;
+  }
+}
+
+/* Marker styles */
+.marker-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.marker-circle {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: white;
+}
+.marker-icon {
+  font-size: 1rem;
+}
+
+/* Glass card */
+.glass-card.p-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+  overflow: hidden;
+}
+.glass-card .p-card-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+.glass-card .p-card-subtitle {
+  color: #64748b;
+}
+.glass-card .desc {
+  color: #334155;
+  line-height: 1.7;
+}
+
+/* Banner */
+.banner {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 0.75rem;
+}
+.banner img {
+  width: 100%;
+  display: block;
+}
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top right,
+    rgba(139, 92, 246, 0.25),
+    rgba(59, 130, 246, 0.25)
+  );
+  pointer-events: none;
+}
+
+/* Chips */
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.chip {
+  border: 1px solid #e5e7eb;
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
+  color: #0f172a;
+}
+.chip i {
+  font-size: 0.9rem;
+}
+
+/* Opposite date */
+.opposite-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  backdrop-filter: blur(6px);
+}
+
+/* Fancy action */
+.fancy-btn {
+  color: #6d28d9 !important;
+}
+.fancy-btn:hover {
+  color: #4f46e5 !important;
+}
+
+/* Center line wrapper styles */
+.timeline-prog-container {
+  position: relative;
+  isolation: isolate; /* ensure internal z-index ordering is honored */
+  padding-bottom: 56px; /* reserve space so progress dot isn't clipped at end */
+  overflow: visible; /* allow dot to render beyond inner layers if needed */
+}
+
+/* Opposite media (image side) */
+.opposite .opposite-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.opposite .opposite-media-square {
+  position: relative;
+  width: min(38vh, 34vw);
+  height: min(38vh, 34vw);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+}
+.opposite .opposite-media-square img,
+.opposite .opposite-media-square .opposite-media--placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #ede9fe, #dbeafe);
+}
+.glass-card--compact.p-card {
+  padding-top: 0.75rem;
+}
+
+@media screen and (max-width: 991px) {
+  .opposite .opposite-media {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0.75rem;
+  }
+  .opposite .opposite-media-square {
+    width: min(36vh, 90vw);
+    height: min(36vh, 90vw);
+  }
+}
+.timeline-content-layer {
+  position: relative;
+  z-index: 2;
+}
+.timeline-center-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #e5e7eb 20%,
+    #e5e7eb 80%,
+    transparent 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+.timeline-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  background: linear-gradient(to bottom, #8b5cf6, #60a5fa);
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Moving dot wrapper (stays centered on the line) */
+.timeline-progress-dot-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50; /* higher than .timeline-content-layer (2) and cards */
+  pointer-events: none;
+}
+
+/* Moving dot (enlarged to contain an image) */
+.timeline-progress-dot {
+  display: inline-block;
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #ffffff 0%,
+    #ffffffcc 45%,
+    #ffffff00 100%
+  );
+  border: 3px solid #8b5cf6;
+  box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.15),
+    0 14px 28px rgba(99, 102, 241, 0.28);
+}
+
+/* Inner image holder */
+.timeline-progress-dot-inner {
+  position: absolute;
+  inset: 6px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.timeline-progress-dot-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.timeline-progress-dot {
+  margin-top: -42px; /* center 84px dot over line end */
+}
+.font-fantasy {
+  font-family: "Fantasy", fantasy;
+}
+/* Scale down on small screens */
+@media (max-width: 640px) {
+  .timeline-progress-dot {
+    width: 64px;
+    height: 64px;
+    border-width: 2px;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15),
+      0 10px 22px rgba(99, 102, 241, 0.26);
+    margin-top: -32px; /* center 64px dot over line end */
+  }
+  .timeline-progress-dot-inner {
+    inset: 5px;
+  }
+  .timeline-prog-container {
+    padding-bottom: 42px; /* scale reserved space for smaller dot */
+  }
+}
+
+/* Tablet layout (768–991px): keep alternating layout like desktop */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Ensure PrimeReact events remain side-by-side like desktop */
+  .customized-timeline .p-timeline-event {
+    flex-direction: row !important;
+    align-items: center;
+    min-height: 46vh;
+  }
+  /* Restore opposite column width; override earlier flex:0 rule */
+  .customized-timeline .p-timeline-event-opposite {
+    flex: 1 1 0 !important;
+    display: flex;
+    justify-content: center;
+  }
+  .customized-timeline .p-timeline-event-content {
+    flex: 1 1 0;
+    justify-content: flex-end;
+    text-align: left !important;
+  }
+  /* Restore alternating layout for even events */
+  .customized-timeline .p-timeline-event:nth-child(even) {
+    flex-direction: row-reverse !important;
+  }
+  .customized-timeline .p-timeline-event:nth-child(even) .p-timeline-event-content {
+    justify-content: flex-start;
+    text-align: right !important;
+  }
+  .customized-timeline .p-timeline-event:nth-child(even) .p-timeline-event-opposite {
+    justify-content: flex-end;
+  }
+  .customized-timeline .p-timeline-event:nth-child(even) .content-wrapper {
+    padding-left: 0;
+    padding-right: 1.5rem;
+  }
+  .content-wrapper {
+    padding-left: 1.5rem;
+  }
+  .customized-timeline .content-card {
+    max-width: min(480px, 52vw);
+  }
+  .opposite .opposite-media {
+    margin-right: 0;
+  }
+  .opposite .opposite-media-square {
+    width: min(28vh, 30vw);
+    height: min(28vh, 30vw);
+  }
+  /* Slightly smaller progress dot so it doesn't dominate on tablet */
+  .timeline-progress-dot {
+    width: 72px;
+    height: 72px;
+    border-width: 2px;
+    margin-top: -36px;
+  }
+  .timeline-progress-dot-inner {
+    inset: 5px;
+  }
+  /* Headline size adjust to avoid wrapping/overflow */
+  .customized-timeline-root .font-fantasy {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+  }
+}
+
+/* Mobile layout: move line + progress (with dot) to the far left,
+   content and opposite to the right stacked vertically (content first) */
+@media (max-width: 768px) {
+  /* Left-align our custom line and keep elements centered on that 2px line */
+  .timeline-center-line,
+  .timeline-progress-fill,
+  .timeline-progress-dot-wrap {
+    left: 1px; /* center x of 2px line */
+    transform: translateX(-50%);
+  }
+
+  /* Give room on the left for the line + dot */
+  .timeline-content-layer {
+    --right-col-max: min(92vw, 560px);
+    padding-left: 3.5rem; /* ~space for 84px dot */
+  }
+  .content-wrapper {
+    padding-left: 0;
+  }
+
+  /* Stack event parts: content above opposite; make them full width */
+  .customized-timeline .p-timeline-event {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+  .customized-timeline .p-timeline-event-content {
+    order: 1;
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left !important;
+  }
+  .customized-timeline .p-timeline-event-opposite {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
+
+  /* Avoid double lines/markers from PrimeReact */
+  .customized-timeline .p-timeline-event-connector,
+  .customized-timeline .p-timeline-event-marker,
+  .customized-timeline .p-timeline-event-separator {
+    display: none !important;
+  }
+
+  /* Tighten opposite media on mobile */
+  .opposite .opposite-media {
+    margin-right: 0;
+    justify-content: flex-start;
+  }
+
+  /* Hide opposite (image) entirely on mobile */
+  .customized-timeline .p-timeline-event-opposite {
+    display: none !important;
+  }
+
+  /* Unify widths for right column elements */
+  .content-card {
+    max-width: var(--right-col-max);
+  }
+  .opposite .opposite-media-square {
+    width: var(--right-col-max);
+    height: auto;
+    aspect-ratio: 1 / 1; /* square, responsive */
+  }
+
+  /* Typo adjustments on mobile for readability */
+  .desc {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+}

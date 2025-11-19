@@ -1,0 +1,74 @@
+@keyframes shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-text-shine {
+  background-image: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.6) 0%,
+    /* lavender soft */ rgba(192, 132, 252, 0.55) 25%,
+    /* soft violet */ rgba(255, 255, 255, 0.5) 50%,
+    /* gentle white highlight */ rgba(192, 132, 252, 0.55) 75%,
+    rgba(124, 58, 237, 0.5) 100%
+  );
+  background-size: 250% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shine 9s ease-in-out infinite;
+}
+
+/* Subtle luxury-like shine for deep purple text */
+@keyframes luxuryTextShineEffect {
+  0% {
+    background-position: 200% 50%;
+    opacity: 0.9;
+  }
+  50% {
+    background-position: 0% 50%;
+    opacity: 1;
+  }
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.9;
+  }
+}
+
+.luxTextShine {
+  /* base color: deep indigo/purple */
+  background-image: linear-gradient(
+    90deg,
+    #2a1a4a 0%,
+    #2a1a4a 46%,
+    rgba(255, 255, 255, 0.55) 50%,
+    #2a1a4a 54%,
+    #2a1a4a 50%
+  );
+  background-size: 220% 100%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: luxuryTextShineEffect 3.6s ease-in-out infinite;
+}
+.luxTextShine2 {
+  /* base color: deep indigo/purple */
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #eaff76 46%,
+    rgba(206, 215, 107, 0.55) 50%,
+    #ffffff 54%,
+    #ffffff 50%
+  );
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-size: 220% 100%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: luxuryTextShineEffect 3.6s ease-in-out infinite;
+}

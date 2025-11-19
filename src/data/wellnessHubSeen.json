@@ -1,0 +1,51 @@
+[
+    {
+        "id": 1,
+        "title": "Giấc ngủ",
+        "places": "37/40 Places",
+        "percent": 78,
+        "avatars": [
+            "https://ac.blooket.com/marketassets/blooks/redastronaut.svg",
+            "https://ac.blooket.com/marketassets/blooks/anaconda.svg",
+            "https://ac.blooket.com/marketassets/blooks/tigerzebra.svg"
+        ],
+        "more": 33,
+        "bg": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/2ef4d0c8-07e2-4645-8118-41aa0a8150bf_file.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Trầm cảm",
+        "places": "22/30 Places",
+        "percent": 65,
+        "avatars": [
+            "https://ac.blooket.com/marketassets/blooks/redastronaut.svg",
+            "https://ac.blooket.com/marketassets/blooks/anaconda.svg"
+        ],
+        "more": 12,
+        "bg": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus_dev/8975d640-89fb-4845-b301-b94f32a0c7bd_file.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Lo âu",
+        "places": "18/25 Places",
+        "percent": 40,
+        "avatars": [
+            "https://ac.blooket.com/marketassets/blooks/anaconda.svg",
+            "https://ac.blooket.com/marketassets/blooks/tigerzebra.svg"
+        ],
+        "more": 5,
+        "bg": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus_dev/40db0c19-97c7-4c42-9acb-f43d8eee35d6_file.jpg"
+    },
+    {
+        "id": 4,
+        "title": "Quản lý lo lắng",
+        "places": "10/20 Places",
+        "percent": 50,
+        "avatars": [
+            "https://ac.blooket.com/marketassets/blooks/redastronaut.svg",
+            "https://ac.blooket.com/marketassets/blooks/tigerzebra.svg"
+        ],
+        "more": 7,
+        "bg": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/c01c2024-bd04-47a4-b4b3-00248f3a93a0_file.jpg"
+    }
+]

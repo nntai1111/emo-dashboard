@@ -1,0 +1,124 @@
+{
+    "digitalGoods": [
+        {
+            "id": "4bb635c7-5aea-4e2a-983e-4a22ff05ccbf",
+            "name": "100% là bạn",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/51dfc9f4-524d-4652-919d-ea67ce1d04af/original/100Me.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "51427c9b-ba40-4d78-ac15-5240ef125895",
+            "name": "Emo ôm bạn",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/4f173667-3ad4-448b-ac17-446b742fe676/original/EmoHugsYou.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "9cd99bc9-d3ff-42e4-9c3f-8741ce23601d",
+            "name": "Tôi ở đây với bạn",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/905e4b1a-2858-4602-b34c-cbadf0547ff8/original/I’mHereWithYou.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "c44e1efb-a284-4eab-84c5-9f5a021b64c2",
+            "name": "Gửi bạn thật nhiều động lực",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/ccd55b54-1ca3-4104-b25c-4a35120b2759/original/SendingYouLotsofMotivation.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "63133a33-6bbc-4208-9495-c9d2d30d7cb4",
+            "name": "Ngủ ngon",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/9472d6c3-4524-4629-9bf4-c5afa8df2efb/original/SleepWell.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "0008af13-fff3-4c3f-9aa2-c689b9f219d3",
+            "name": "Thư giãn đi",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/62c19b00-a8f9-43e1-adbb-d421746a8c3e/original/TakeItEasy.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "c5a710e2-c0ca-4522-95a1-d5c76e70bd69",
+            "name": "Bạn có thể làm được",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/99d97b6a-99ff-4c06-88e6-a7a9973e4259/original/YouCanDoIt.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "03045c1a-803d-453f-8ed4-f5ab680b3dbd",
+            "name": "Bạn sẽ vượt qua",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/78a83ece-6177-45fc-9ebc-b2faeb06f818/original/You_llGetThroughThis.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "4e98f9de-b302-47e4-b186-1725df2d9499",
+            "name": "Bạn rất quan trọng",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/d421057e-ae35-4346-80c9-5628c656b2f7/original/YouMatterSoMuch.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "37adc55a-37be-4779-8af6-893aa56df742",
+            "name": "Bạn thật tuyệt vời",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/7a5d4eb6-893c-4ff0-8740-7cae9d08da54/original/You’reAmazing.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "9fbda6b3-891b-4200-93a3-b61bc1560c7d",
+            "name": "Bạn đang tỏa sáng",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/42ea7aad-8e63-4abb-b83f-da39007dd855/original/You_reShiningBright.webp",
+            "isOwnedByUser": false
+        },
+        {
+            "id": "d2098512-4e5c-40ef-a00e-f9e6cadf8720",
+            "name": "Bạn thật đặc biệt",
+            "type": "Gift",
+            "consumptionType": "Entitlement",
+            "price": 0,
+            "description": null,
+            "mediaUrl": "https://media-emoease.b-cdn.net/DigitalGood/9cacdd5c-0ed9-45be-a0aa-3d5cdb10d354/original/You’reSoSpecial.webp",
+            "isOwnedByUser": false
+        }
+    ]
+}

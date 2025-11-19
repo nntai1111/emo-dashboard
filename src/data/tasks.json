@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "title": "Daily Meditation",
+        "category": "Meditation",
+        "duration": "3 Days",
+        "description": "Practice mindfulness to start your day.",
+        "image": "https://via.placeholder.com/150?text=Meditation",
+        "tasks": [
+            {
+                "day": 1,
+                "date": "2025-09-30",
+                "task": "Practice 5 minutes of mindful breathing."
+            },
+            {
+                "day": 2,
+                "date": "2025-10-01",
+                "task": "Meditate for 10 minutes with guided audio."
+            },
+            {
+                "day": 3,
+                "date": "2025-10-02",
+                "task": "Reflect on your meditation experience."
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Gratitude Journal",
+        "category": "Knowledge",
+        "duration": "3 Days",
+        "description": "Write things you're grateful for each day.",
+        "image": "https://via.placeholder.com/150?text=Gratitude",
+        "tasks": [
+            {
+                "day": 1,
+                "date": "2025-09-30",
+                "task": "Write 3 things you're grateful for today."
+            },
+            {
+                "day": 2,
+                "date": "2025-10-01",
+                "task": "Share a positive story with a friend."
+            },
+            {
+                "day": 3,
+                "date": "2025-10-02",
+                "task": "Write a thank-you note to someone."
+            }
+        ]
+    }
+]

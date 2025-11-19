@@ -1,0 +1,334 @@
+{
+    "categoryTags": [
+        {
+            "id": "e332c23f-d32b-4cd5-b80c-b05e7a3b4ac8",
+            "code": "relationships",
+            "displayName": "Relationships",
+            "displayNameVi": "Mối quan hệ",
+            "color": null,
+            "unicodeCodepoint": "U+1F49E",
+            "isActive": true,
+            "sortOrder": 1
+        },
+        {
+            "id": "64b41630-6224-4ad4-aaab-e16f31c15db7",
+            "code": "family",
+            "displayName": "Family",
+            "displayNameVi": "Gia đình",
+            "color": null,
+            "unicodeCodepoint": "U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466",
+            "isActive": true,
+            "sortOrder": 2
+        },
+        {
+            "id": "219fdfd1-6356-48e0-a0aa-25db684c551b",
+            "code": "habits",
+            "displayName": "Habits",
+            "displayNameVi": "Thói quen",
+            "color": null,
+            "unicodeCodepoint": "U+1F504",
+            "isActive": true,
+            "sortOrder": 3
+        },
+        {
+            "id": "9a2b5f88-9406-437b-bc38-e2f18f8f0007",
+            "code": "friends",
+            "displayName": "Friends",
+            "displayNameVi": "Bạn bè",
+            "color": null,
+            "unicodeCodepoint": "U+1F91D",
+            "isActive": true,
+            "sortOrder": 4
+        },
+        {
+            "id": "a6416aa4-dbba-4e1e-bab3-b1e3559e7410",
+            "code": "hopes",
+            "displayName": "Hopes",
+            "displayNameVi": "Hy vọng",
+            "color": null,
+            "unicodeCodepoint": "U+1F31F",
+            "isActive": true,
+            "sortOrder": 5
+        },
+        {
+            "id": "57896d71-66e2-49dd-a96f-e34591a63ec6",
+            "code": "bullying",
+            "displayName": "Bullying",
+            "displayNameVi": "Bắt nạt",
+            "color": null,
+            "unicodeCodepoint": "U+1F6D1",
+            "isActive": true,
+            "sortOrder": 6
+        },
+        {
+            "id": "fab17fba-0577-4c77-8e11-aa134c54a549",
+            "code": "health",
+            "displayName": "Health",
+            "displayNameVi": "Sức khỏe",
+            "color": null,
+            "unicodeCodepoint": "U+1FA7A",
+            "isActive": true,
+            "sortOrder": 7
+        },
+        {
+            "id": "ccba7631-4b9e-4303-a171-9a473883cbe3",
+            "code": "work",
+            "displayName": "Work",
+            "displayNameVi": "Công việc",
+            "color": null,
+            "unicodeCodepoint": "U+1F4BC",
+            "isActive": true,
+            "sortOrder": 8
+        },
+        {
+            "id": "dc7f4c2e-dc88-4a26-9f6b-a29b141b55cd",
+            "code": "music",
+            "displayName": "Music",
+            "displayNameVi": "Âm nhạc",
+            "color": null,
+            "unicodeCodepoint": "U+1F3B6",
+            "isActive": true,
+            "sortOrder": 9
+        },
+        {
+            "id": "0f51b355-7882-483a-830f-540f92b74d45",
+            "code": "helpful tips",
+            "displayName": "Helpful Tips",
+            "displayNameVi": "Mẹo hữu ích",
+            "color": null,
+            "unicodeCodepoint": "U+1F4A1",
+            "isActive": true,
+            "sortOrder": 10
+        },
+        {
+            "id": "b1eb931e-b34a-401f-8f2a-ab96ff860df2",
+            "code": "parenting",
+            "displayName": "Parenting",
+            "displayNameVi": "Nuôi dạy con",
+            "color": null,
+            "unicodeCodepoint": "U+1F476",
+            "isActive": true,
+            "sortOrder": 11
+        },
+        {
+            "id": "7813224d-1aef-4b13-a071-3b8d4316f065",
+            "code": "education",
+            "displayName": "Education",
+            "displayNameVi": "Giáo dục",
+            "color": null,
+            "unicodeCodepoint": "U+1F4DC",
+            "isActive": true,
+            "sortOrder": 12
+        },
+        {
+            "id": "95bcabb2-1276-4876-a13c-91143c038418",
+            "code": "religion",
+            "displayName": "Religion",
+            "displayNameVi": "Tôn giáo",
+            "color": null,
+            "unicodeCodepoint": "U+1F64F",
+            "isActive": true,
+            "sortOrder": 13
+        },
+        {
+            "id": "3a0b55e7-d452-4b5f-ae1e-a34604262890",
+            "code": "lgbtq",
+            "displayName": "LGBTQ+",
+            "displayNameVi": "LGBTQ+",
+            "color": null,
+            "unicodeCodepoint": "U+1F308",
+            "isActive": true,
+            "sortOrder": 14
+        },
+        {
+            "id": "0557747f-417c-4c3d-9ec2-fdbadc8bbe5e",
+            "code": "pregnancy",
+            "displayName": "Pregnancy",
+            "displayNameVi": "Mang thai",
+            "color": null,
+            "unicodeCodepoint": "U+1F930",
+            "isActive": true,
+            "sortOrder": 15
+        },
+        {
+            "id": "9db71c15-a422-4098-a0c5-1f494e889cac",
+            "code": "positive",
+            "displayName": "Positive",
+            "displayNameVi": "Tích cực",
+            "color": null,
+            "unicodeCodepoint": "U+1F60A U+1F44D",
+            "isActive": true,
+            "sortOrder": 16
+        },
+        {
+            "id": "c0f43a06-c309-4c1e-bde5-7a07837155f2",
+            "code": "wellbeing",
+            "displayName": "Wellbeing",
+            "displayNameVi": "Sức khỏe tinh thần",
+            "color": null,
+            "unicodeCodepoint": "U+1F9D8",
+            "isActive": true,
+            "sortOrder": 17
+        },
+        {
+            "id": "a89a78f1-e925-4192-a02f-9be710adce43",
+            "code": "my story",
+            "displayName": "My Story",
+            "displayNameVi": "Câu chuyện của tôi",
+            "color": null,
+            "unicodeCodepoint": "U+1F4D3",
+            "isActive": true,
+            "sortOrder": 18
+        },
+        {
+            "id": "2f89ae0a-2887-43bf-ab8b-e9d74bdda1b8",
+            "code": "poetry",
+            "displayName": "Poetry",
+            "displayNameVi": "Thơ ca",
+            "color": null,
+            "unicodeCodepoint": "U+1F4DC",
+            "isActive": true,
+            "sortOrder": 19
+        },
+        {
+            "id": "f3d763a3-7218-42b7-a35a-f75e2fae5825",
+            "code": "resilience",
+            "displayName": "Resilience",
+            "displayNameVi": "Khả năng phục hồi",
+            "color": null,
+            "unicodeCodepoint": "U+1F4AA",
+            "isActive": true,
+            "sortOrder": 20
+        },
+        {
+            "id": "47d41bef-bda5-43b1-b252-1399134cb202",
+            "code": "challenges",
+            "displayName": "Challenges",
+            "displayNameVi": "Thử thách",
+            "color": null,
+            "unicodeCodepoint": "U+1F3CB",
+            "isActive": true,
+            "sortOrder": 21
+        },
+        {
+            "id": "9d039da1-2d80-4703-8a5d-0f35fa6d1228",
+            "code": "self-care",
+            "displayName": "Self-Care",
+            "displayNameVi": "Chăm sóc bản thân",
+            "color": null,
+            "unicodeCodepoint": "U+1F6C1",
+            "isActive": true,
+            "sortOrder": 22
+        },
+        {
+            "id": "056a8f2d-cb6e-403f-b4ce-152279f4a32f",
+            "code": "guidance",
+            "displayName": "Guidance",
+            "displayNameVi": "Hướng dẫn",
+            "color": null,
+            "unicodeCodepoint": "U+1F9ED",
+            "isActive": true,
+            "sortOrder": 23
+        },
+        {
+            "id": "e2cab841-387c-43df-bcb7-babea4e2f9e7",
+            "code": "new parents",
+            "displayName": "New Parents",
+            "displayNameVi": "Cha mẹ mới",
+            "color": null,
+            "unicodeCodepoint": "U+1F37C",
+            "isActive": true,
+            "sortOrder": 24
+        },
+        {
+            "id": "d4eda0ff-57c4-4a61-8dac-03d2da07f222",
+            "code": "gaming",
+            "displayName": "Gaming",
+            "displayNameVi": "Trò chơi",
+            "color": null,
+            "unicodeCodepoint": "U+1F3AE",
+            "isActive": true,
+            "sortOrder": 25
+        },
+        {
+            "id": "64b4af84-ebc0-490f-b3d5-2a878bb3476e",
+            "code": "grief",
+            "displayName": "Grief",
+            "displayNameVi": "Đau buồn",
+            "color": null,
+            "unicodeCodepoint": "U+1F622",
+            "isActive": true,
+            "sortOrder": 26
+        },
+        {
+            "id": "43be895c-c2b0-4192-a86a-652b46222f87",
+            "code": "stress",
+            "displayName": "Stress",
+            "displayNameVi": "Căng thẳng",
+            "color": null,
+            "unicodeCodepoint": "U+1F613",
+            "isActive": true,
+            "sortOrder": 27
+        },
+        {
+            "id": "0cf20ddd-2af0-4397-a519-aa06680a0351",
+            "code": "disabilities",
+            "displayName": "Disabilities",
+            "displayNameVi": "Khuyết tật",
+            "color": null,
+            "unicodeCodepoint": "U+267F",
+            "isActive": true,
+            "sortOrder": 28
+        },
+        {
+            "id": "6b35647f-befb-4f55-b129-742d7b3551fe",
+            "code": "emotions",
+            "displayName": "Emotions",
+            "displayNameVi": "Cảm xúc",
+            "color": null,
+            "unicodeCodepoint": "U+1F60A U+1F622",
+            "isActive": true,
+            "sortOrder": 29
+        },
+        {
+            "id": "e079cbdc-29a5-40bd-b761-0820923408a7",
+            "code": "life hacks",
+            "displayName": "Life Hacks",
+            "displayNameVi": "Mẹo sống",
+            "color": null,
+            "unicodeCodepoint": "U+1F6E0",
+            "isActive": true,
+            "sortOrder": 30
+        },
+        {
+            "id": "22707531-cdec-4801-ae35-78869b504f08",
+            "code": "politics",
+            "displayName": "Politics",
+            "displayNameVi": "Chính trị",
+            "color": null,
+            "unicodeCodepoint": "U+1F5F3",
+            "isActive": true,
+            "sortOrder": 31
+        },
+        {
+            "id": "77c614a8-5db6-4b05-b7e0-b63bdfa27a91",
+            "code": "ask emoease",
+            "displayName": "Ask EmoEase",
+            "displayNameVi": "Hỏi EmoEase",
+            "color": null,
+            "unicodeCodepoint": "U+2753",
+            "isActive": true,
+            "sortOrder": 32
+        },
+        {
+            "id": "ce6cdf2e-31ee-413d-bd5a-3af1a748e54c",
+            "code": "others",
+            "displayName": "Others",
+            "displayNameVi": "Khác",
+            "color": null,
+            "unicodeCodepoint": "U+1F30E",
+            "isActive": true,
+            "sortOrder": 33
+        }
+    ]
+}

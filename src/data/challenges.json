@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "title": "Daily Meditation",
+        "category": "Meditation",
+        "duration": "1 Day",
+        "description": "Practice 5 minutes of mindful breathing to start your day.",
+        "image": "https://static.wixstatic.com/media/9cd339_f18f9ce37f0346d69d9792015b2b4c4c~mv2.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Gratitude Journal",
+        "category": "Knowledge",
+        "duration": "3 Days",
+        "description": "Write 3 things you're grateful for each day.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus_dev/c8ef0c9c-2fad-4d48-890e-ec8e7c1beede_file.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Morning Stretch",
+        "category": "Practice",
+        "duration": "7 Days",
+        "description": "Do a 10-minute stretching routine every morning.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/6a5097cb-1196-4600-b4ca-5a4e40e048e4_file.jpg"
+    },
+    {
+        "id": 4,
+        "title": "Stress Relief",
+        "category": "Meditation",
+        "duration": "3 Days",
+        "description": "Try guided meditation to reduce stress.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/2ef4d0c8-07e2-4645-8118-41aa0a8150bf_file.jpg"
+    },
+    {
+        "id": 5,
+        "title": "Evening Reflection",
+        "category": "Knowledge",
+        "duration": "5 Days",
+        "description": "Spend 5 minutes reviewing your day: highs, lows, lessons.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus_dev/40db0c19-97c7-4c42-9acb-f43d8eee35d6_file.jpg"
+    },
+    {
+        "id": 6,
+        "title": "Digital Detox",
+        "category": "Practice",
+        "duration": "2 Days",
+        "description": "Limit social media & screens for 2 full days.",
+        "image": "https://static.wixstatic.com/media/9cd339_8705551147aa4c6c87eb5c110c612636~mv2.jpg"
+    },
+    {
+        "id": 7,
+        "title": "Mindful Walk",
+        "category": "Meditation",
+        "duration": "4 Days",
+        "description": "Take a 10-minute slow, mindful walk every evening.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/8f144d40-f96a-43d0-a804-2106e17ab3d0_file.jpg"
+    },
+    {
+        "id": 8,
+        "title": "Affirmation Practice",
+        "category": "Knowledge",
+        "duration": "3 Days",
+        "description": "Recite positive affirmations in the morning and night.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/8f144d40-f96a-43d0-a804-2106e17ab3d0_file.jpg"
+    },
+    {
+        "id": 9,
+        "title": "Deep Breathing",
+        "category": "Meditation",
+        "duration": "1 Day",
+        "description": "Practice 10 deep breathing cycles when feeling anxious.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/2ef4d0c8-07e2-4645-8118-41aa0a8150bf_file.jpg"
+    },
+    {
+        "id": 10,
+        "title": "Sleep Preparation",
+        "category": "Practice",
+        "duration": "7 Days",
+        "description": "Do a 5-minute bedtime wind-down ritual before sleep.",
+        "image": "https://d37bukf1aia83y.cloudfront.net/wellness/plexus/169f4f04-f6a5-426e-adbb-0a9d35e86af9_file.jpg"
+    }
+]
