@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LogOut, User, BarChart3, TrendingUp, Users, DollarSign } from "lucide-react";
+import { authService } from "../services/authService";
 import LineChart from "../components/charts/LineChart";
 import BarChart from "../components/charts/BarChart";
 import PieChart from "../components/charts/PieChart";
@@ -11,12 +12,22 @@ const Dashboard = () => {
     const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("auth_user");
-        window.dispatchEvent(new CustomEvent("app:logout"));
-        navigate("/login");
+    const handleLogout = async () => {
+        try {
+            // Call centralized logout which will attempt revoke on backend,
+            // then clear local storage and dispatch Redux logout.
+            await authService.logoutRemote();
+        } catch (e) {
+            console.warn("logoutRemote failed, falling back to local clear", e);
+            try {
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
+                localStorage.removeItem("auth_user");
+                window.dispatchEvent(new CustomEvent("app:logout"));
+            } catch {}
+        } finally {
+            navigate("/login");
+        }
     };
 
     const stats = [
