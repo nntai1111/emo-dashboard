@@ -38,17 +38,20 @@ export default function App() {
 
         {/* --- PRIVATE LAYOUT --- */}
         <Route element={<PrivateLayout isAuthenticated={isAuthenticated} />}>
-          {privateRoutes.map((r) => (
-            <Route
-              key={r.path}
-              path={r.path}
-              element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <r.component />
-                </Suspense>
-              }
-            />
-          ))}
+          {privateRoutes.map((r) => {
+            const Component = r.component;
+            return (
+              <Route
+                key={r.path}
+                path={r.path}
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Component />
+                  </Suspense>
+                }
+              />
+            );
+          })}
         </Route>
 
         {/* --- Default redirect --- */}

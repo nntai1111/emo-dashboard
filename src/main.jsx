@@ -61,7 +61,7 @@
 // main.jsx
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // Thêm
 import { store } from "./store";
@@ -127,11 +127,11 @@ createRoot(document.getElementById("root")).render(
       <QueryClientProvider client={queryClient}>
         {" "}
         {/* Thêm ở đây */}
-        <BrowserRouter>
+        <HashRouter>
           <LanguageProvider>
             <Root />
           </LanguageProvider>
-        </BrowserRouter>
+        </HashRouter>
       </QueryClientProvider>
     </Provider>
   </StrictMode>
