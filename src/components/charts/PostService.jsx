@@ -57,9 +57,12 @@ const PostCohortHeatmap = () => {
                 let transformed = series.map((item) => {
                     const map = { cohortSize: item.cohortSize };
                     item.points.forEach((p) => {
-                        map[`w${p.week}`] = p.percent;
+                        // store percent plus an absolute count (active) when available
+                        const percent = p.percent ?? 0;
+                        const count = p.active ?? p.count ?? Math.round((item.cohortSize || 0) * (percent / 100));
+                        map[`w${p.week}`] = { percent, count };
                     });
-                    map.w0 = 100;
+                    map.w0 = { percent: 100, count: item.cohortSize };
                     return {
                         cohortWeek: item.cohortWeek, // giữ lại để sort chính xác
                         cohort: formatCohortLabel(item.cohortWeek),
@@ -166,22 +169,30 @@ const PostCohortHeatmap = () => {
                                         <div className="flex flex-col">
                                             <span className="text-slate-900 font-medium">{row.cohort}</span>
                                             <span className="text-xs text-slate-500 mt-1">
-                                                {row.cohortSize.toLocaleString()} bài viết
+                                                {row.cohortSize.toLocaleString()} người dùng
                                             </span>
                                         </div>
                                     </td>
 
                                     {Array.from({ length: maxWeeks }, (_, weekIdx) => {
                                         const val = row[`w${weekIdx}`];
+                                        const percent = val ? (val.percent ?? 0) : undefined;
+                                        const count = val ? (val.count ?? Math.round((row.cohortSize || 0) * ((percent || 0) / 100))) : undefined;
+
                                         return (
                                             <td key={weekIdx} className="py-2 text-center">
                                                 {val !== undefined ? (
                                                     <div
-                                                        className={`inline-flex items-center justify-center w-14 h-8 rounded-lg text-white font-medium text-xs shadow-sm ${getCohortColor(
-                                                            val
+                                                        className={`inline-flex flex-col items-center justify-center w-20 h-10 rounded-lg text-white font-medium text-xs shadow-sm ${getCohortColor(
+                                                            percent
                                                         )}`}
                                                     >
-                                                        {val === 0 ? "0%" : val.toFixed(1) + "%"}
+                                                        <div className="leading-none">
+                                                            {percent === 0 ? "0%" : (percent).toFixed(1) + "%"}
+                                                        </div>
+                                                        <div className="text-[10px] opacity-90 mt-1">
+                                                            ( {typeof count === "number" ? count.toLocaleString() : "-"} active)
+                                                        </div>
                                                     </div>
                                                 ) : (
                                                     <span className="text-slate-300 text-base">—</span>
