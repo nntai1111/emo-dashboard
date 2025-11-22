@@ -143,3 +143,36 @@ export const aliasService = {
         return data.profile;
     }
 };
+
+// Payments service - fetch payments list (with bearer token)
+export const paymentsService = {
+    getPayments: async ({ pageIndex = 1, pageSize = 10, status = 'Completed', sortOrder = 'desc' } = {}) => {
+        const baseUrl = 'https://api.emoease.vn/payment-service';
+        const token = await tokenManager.ensureValidToken();
+
+        if (!token) {
+            throw new Error('No authentication token found. Please login first.');
+        }
+
+        const qs = `?PageIndex=${encodeURIComponent(pageIndex)}&PageSize=${encodeURIComponent(pageSize)}&Status=${encodeURIComponent(status)}&SortOrder=${encodeURIComponent(sortOrder)}`;
+
+        const response = await fetch(`${baseUrl}/v1/payments${qs}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${await tokenManager.ensureValidToken()}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Payments API Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // The API returns an object with `payments` wrapper in the example
+        return data.payments || data;
+    }
+};
