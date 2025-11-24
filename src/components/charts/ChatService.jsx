@@ -99,7 +99,7 @@ const ChatbotCohortHeatmap = () => {
                         Tỷ lệ người dùng quay lại dùng Chatbot theo cohort tuần
                     </h2>
                     <p className="text-xs text-slate-500 mt-1">
-                        % người dùng từng chat với AI trong tuần đó, quay lại chat tiếp trong các tuần sau (tính theo device)
+                        % người dùng từng chat với AI trong tuần đó, quay lại chat tiếp trong các tuần sau
                     </p>
                 </div>
 

@@ -41,12 +41,21 @@ const DailyPaymentsChart = ({ payments: propsPayments }) => {
     const data = useMemo(() => {
         if (!payments || payments.length === 0) return [];
 
+        // Group by calendar day in UTC to avoid local timezone shifts
         const map = {};
         payments.forEach(p => {
             const created = p?.createdAt ? new Date(p.createdAt) : null;
             if (!created || isNaN(created.getTime())) return; // skip invalid dates
-            const date = format(created, "dd/MM");
-            const fullDate = created;
+
+            // Use UTC-based day/month so events that were created in UTC
+            // don't get shifted to previous/next day by the client's timezone.
+            const day = String(created.getUTCDate()).padStart(2, "0");
+            const month = String(created.getUTCMonth() + 1).padStart(2, "0");
+            const date = `${day}/${month}`;
+
+            // Use a UTC midnight timestamp for stable chronological sorting
+            const fullDate = new Date(Date.UTC(created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate()));
+
             if (!map[date]) {
                 map[date] = { date, fullDate, revenue: 0, orders: 0 };
             }
@@ -109,35 +118,27 @@ const DailyPaymentsChart = ({ payments: propsPayments }) => {
         <div className="space-y-8">
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-lg">
+                <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg">
                     <div className="flex items-center gap-3">
                         <DollarSign className="w-8 h-8 opacity-90" />
                         <div>
-                            <p className="text-blue-100 text-sm">Tổng doanh thu</p>
+                            <p className="text-green-100 text-sm">Tổng doanh thu</p>
                             <p className="text-2xl font-bold">{formatVND(totalRevenue)}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-violet-500 to-violet-600 text-white rounded-2xl p-6 shadow-lg">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl p-6 shadow-lg">
                     <div className="flex items-center gap-3">
                         <Users className="w-8 h-8 opacity-90" />
                         <div>
-                            <p className="text-violet-100 text-sm">Số người mua</p>
+                            <p className="text-blue-100 text-sm">Số người mua</p>
                             <p className="text-2xl font-bold">{totalOrders}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl p-6 shadow-lg">
-                    <div className="flex items-center gap-3">
-                        <TrendingUp className="w-8 h-8 opacity-90" />
-                        <div>
-                            <p className="text-green-100 text-sm">AOV trung bình</p>
-                            <p className="text-2xl font-bold">{formatVND(avgAOV)}</p>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             {/* Two Charts */}
@@ -201,30 +202,7 @@ const DailyPaymentsChart = ({ payments: propsPayments }) => {
                 </div>
             </div>
 
-            {/* Bonus: Payment Methods Mini */}
-            {payments && payments.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Phương thức thanh toán phổ biến</h3>
-                    <div className="flex flex-wrap gap-4">
-                        {Object.entries(
-                            payments.reduce((acc, p) => {
-                                const method = (p.method || p.gateway || p.paymentMethod || "Khác").trim() || "Khác";
-                                acc[method] = (acc[method] || 0) + 1;
-                                return acc;
-                            }, {})
-                        )
-                            .sort(([, a], [, b]) => b - a)
-                            .slice(0, 5)
-                            .map(([method, count]) => (
-                                <div key={method} className="flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-xl">
-                                    <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
-                                    <span className="text-sm font-medium text-gray-700">{method}</span>
-                                    <span className="text-sm font-bold text-gray-900">{count} lượt</span>
-                                </div>
-                            ))}
-                    </div>
-                </div>
-            )}
+
         </div>
     );
 };

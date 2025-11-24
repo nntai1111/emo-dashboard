@@ -68,12 +68,11 @@ const Dashboard = () => {
             <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between">
-                        <h1 className="text-2xl font-bold text-slate-900">Dashboard Quản trị</h1>
+                        <h1 className="text-2xl font-bold text-slate-900">
+                            Thống Kê <span className="text-pink-700">EMO</span><span className="text-purple-800">EASE</span>
+                        </h1>
                         <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-3 text-slate-700">
-                                <User className="w-5 h-5" />
-                                <span className="font-medium">{user?.fullName || user?.email || "Admin"}</span>
-                            </div>
+
                             <button
                                 onClick={handleLogout}
                                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
@@ -83,14 +82,14 @@ const Dashboard = () => {
                             </button>
                         </div>
                     </div>
-                </div>
-            </header>
+                </div >
+            </header >
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            < main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8" >
 
                 {/* Payments Daily Chart */}
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+                <div div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8" >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                         <h2 className="text-xl font-bold text-slate-900">Doanh thu & lượt mua theo ngày</h2>
                         <div className="text-sm text-slate-600 mt-2 sm:mt-0">
@@ -98,10 +97,9 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <DailyPaymentsChart payments={paymentsData} />
-                </div>
-
+                </div >
                 {/* Cohort Retention */}
-                <div className="mt-12">
+                <div div className="mt-12" >
                     <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center">
                         Phân tích Retention theo Cohort tuần
                     </h2>
@@ -111,7 +109,7 @@ const Dashboard = () => {
                                 <h3 className="text-lg font-bold">Bài viết (Post)</h3>
                                 <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại xem bài</p>
                             </div>
-                            <div className="p-5">
+                            <div className="">
                                 <PostService maxWeeksOverride={6} compact />
                             </div>
                         </div>
@@ -121,14 +119,14 @@ const Dashboard = () => {
                                 <h3 className="text-lg font-bold">Chatbot AI</h3>
                                 <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại chat</p>
                             </div>
-                            <div className="p-5">
+                            <div className="">
                                 <ChatService maxWeeksOverride={6} compact />
                             </div>
                         </div>
                     </div>
-                </div>
-            </main>
-        </div>
+                </div >
+            </main >
+        </div >
     );
 };
 

@@ -817,7 +817,7 @@ const LogIn = () => {
                 {/* Hidden container for the official GIS button */}
                 <div ref={googleBtnRef} className="hidden" aria-hidden />
 
-                {/* <Divider>Hoặc dùng email</Divider>
+                <Divider>Hoặc dùng email</Divider>
 
                 <form onSubmit={handleSubmit} noValidate>
                   {errors.general && (
@@ -974,7 +974,7 @@ const LogIn = () => {
                     className="mt-2 w-full">
                     {mode === "login" ? "Đăng nhập" : "Tạo tài khoản"}
                   </Button>
-                </form> */}
+                </form>
 
                 <p className="mt-4 text-sm text-slate-600">
                   {mode === "login" ? (
