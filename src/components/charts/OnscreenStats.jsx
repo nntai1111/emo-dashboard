@@ -1,19 +1,61 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { tokenManager } from "../../services/tokenManager";
+import {
+    AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
+    Tooltip, Legend, ResponsiveContainer, ComposedChart
+} from "recharts";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+
+// Hàm chuyển giây → định dạng đẹp (giờ + phút + giây)
+const formatSeconds = (totalSeconds) => {
+    if (!totalSeconds || totalSeconds < 0) return "0 giây";
+    const secs = Math.round(totalSeconds);
+
+    if (secs < 60) return `${secs} giây`;
+
+    const minutes = Math.floor(secs / 60);
+    const seconds = secs % 60;
+
+    if (minutes < 60) {
+        return seconds > 0
+            ? `${minutes} phút ${seconds} giây`
+            : `${minutes} phút`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    if (mins === 0) return `${hours} giờ`;
+    if (seconds === 0) return `${hours} giờ ${mins} phút`;
+    return `${hours} giờ ${mins} phút ${seconds} giây`;
+};
+
+// Tooltip tùy chỉnh để hiển thị thời gian đẹp
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg text-sm">
+                <p className="font-medium text-gray-800">{label}</p>
+                {payload.map((entry, i) => (
+                    <p key={i} style={{ color: entry.color }}>
+                        {entry.name === "Giây trung bình"
+                            ? `${entry.name}: ${formatSeconds(entry.value)}`
+                            : `${entry.name}: ${entry.value.toLocaleString()} ${entry.name.includes("Users") ? "người" : ""}`}
+                    </p>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
 
 const OnscreenStats = () => {
-    const [points, setPoints] = useState([]);
+    const [onscreenData, setOnscreenData] = useState([]);
     const [totals, setTotals] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [startDate, setStartDate] = useState("");
-    const [maxWeeks, setMaxWeeks] = useState(7);
-
-    // State for registration chart
-    const [regPoints, setRegPoints] = useState([]);
-    const [regTotalUsers, setRegTotalUsers] = useState(null);
-    const [regLoading, setRegLoading] = useState(false);
-    const [regError, setRegError] = useState(null);
+    const [regData, setRegData] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [regLoading, setRegLoading] = useState(true);
 
     const now = new Date();
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
@@ -21,38 +63,31 @@ const OnscreenStats = () => {
 
     const fetchOnscreen = async () => {
         setLoading(true);
-        setError(null);
         try {
             const token = await tokenManager.ensureValidToken();
-            if (!token) throw new Error("No auth token available");
-
-            let qs = `?maxWeeks=${encodeURIComponent(maxWeeks)}`;
-            if (startDate) qs += `&startDate=${encodeURIComponent(startDate)}`;
-
-            const resp = await fetch(`https://api.emoease.vn/chatbox-service/api/AIChat/dashboard/onscreen-stats${qs}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
+            const resp = await fetch(`https://api.emoease.vn/chatbox-service/api/AIChat/dashboard/onscreen-stats?maxWeeks=12`, {
+                headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (!resp.ok) {
-                const txt = await resp.text();
-                throw new Error(`onscreen-stats API error: ${resp.status} ${txt}`);
-            }
-
+            if (!resp.ok) throw new Error("Lỗi tải dữ liệu onscreen");
             const data = await resp.json();
-            setPoints(data.points || []);
+
+            const sorted = (data.points || [])
+                .map(p => ({
+                    date: format(new Date(p.activityDate), "dd/MM"),
+                    dayName: format(new Date(p.activityDate), "EEE"),
+                    activeUsers: Number(p.totalActiveUsers) || 0,
+                    avgSeconds: Number(p.avgOnscreenSecondsPerUser) || 0,
+                }))
+                .sort((a, b) => a.date.localeCompare(b.date));
+
+            setOnscreenData(sorted);
             setTotals({
-                totalActiveUsersAllTime: data.totalActiveUsersAllTime,
-                totalSystemOnscreenSecondsAllTime: data.totalSystemOnscreenSecondsAllTime,
-                avgOnscreenSecondsPerUserAllTime: data.avgOnscreenSecondsPerUserAllTime,
+                totalActiveAllTime: data.totalActiveUsersAllTime || 0,
+                totalSecondsAllTime: Number(data.totalSystemOnscreenSecondsAllTime) || 0,
+                avgSecondsAllTime: Number(data.avgOnscreenSecondsPerUserAllTime) || 0,
             });
         } catch (err) {
             console.error(err);
-            setError(err.message || String(err));
         } finally {
             setLoading(false);
         }
@@ -60,54 +95,42 @@ const OnscreenStats = () => {
 
     const fetchRegistration = async () => {
         setRegLoading(true);
-        setRegError(null);
         try {
             const token = await tokenManager.ensureValidToken();
-            if (!token) throw new Error("No auth token available");
 
-            // Daily new users
-            const qs = `?year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(selectedMonth)}`;
-            const dailyResp = await fetch(`https://api.emoease.vn/profile-service/api/v1/dashboard/daily-new-users${qs}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!dailyResp.ok) {
-                const txt = await dailyResp.text();
-                throw new Error(`daily-new-users API error: ${dailyResp.status} ${txt}`);
-            }
-
+            const dailyResp = await fetch(
+                `https://api.emoease.vn/profile-service/api/v1/dashboard/daily-new-users?year=${selectedYear}&month=${selectedMonth}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             const dailyData = await dailyResp.json();
-            const pointsData = (dailyData?.dailyNewUserStats?.points || []).map((p) => ({
-                date: p.date,
-                newUserCount: Number(p.newUserCount) || 0,
+
+            const totalResp = await fetch(
+                `https://api.emoease.vn/profile-service/api/v1/dashboard/total-users-count`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            const totalData = await totalResp.json();
+            setTotalUsers(totalData.totalUsersCount || 0);
+
+            const start = startOfMonth(new Date(selectedYear, selectedMonth - 1));
+            const end = endOfMonth(start);
+            const days = eachDayOfInterval({ start, end });
+
+            const map = new Map(
+                (dailyData?.dailyNewUserStats?.points || []).map(p => [
+                    p.date,
+                    Number(p.newUserCount) || 0
+                ])
+            );
+
+            const chartData = days.map(day => ({
+                date: format(day, "dd/MM"),
+                day: format(day, "dd"),
+                newUsers: map.get(format(day, "yyyy-MM-dd")) || 0,
             }));
 
-            // Total users count
-            const totalResp = await fetch(`https://api.emoease.vn/profile-service/api/v1/dashboard/total-users-count`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!totalResp.ok) {
-                const txt = await totalResp.text();
-                throw new Error(`total-users-count API error: ${totalResp.status} ${txt}`);
-            }
-
-            const totalData = await totalResp.json();
-            setRegPoints(pointsData);
-            setRegTotalUsers(typeof totalData.totalUsersCount === "number" ? totalData.totalUsersCount : Number(totalData.totalUsersCount) || null);
+            setRegData(chartData);
         } catch (err) {
             console.error(err);
-            setRegError(err.message || String(err));
         } finally {
             setRegLoading(false);
         }
@@ -115,346 +138,120 @@ const OnscreenStats = () => {
 
     useEffect(() => {
         fetchOnscreen();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         fetchRegistration();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedYear, selectedMonth]);
 
-    // LineChart component (reusable)
-    const LineChart = ({ labels, values, pointsRaw = [] }) => {
-        if (!labels.length) return <div className="text-sm text-slate-500">Không có dữ liệu</div>;
-
-        const width = 700;
-        const height = 180;
-        const left = 54;
-        const right = 20;
-        const top = 15;
-        const bottom = 35;
-        const chartWidth = width - left - right;
-        const chartHeight = height - top - bottom;
-
-        const maxValue = Math.max(...values, 1);
-        const minValue = Math.min(...values, 0);
-        const range = maxValue - minValue || 1;
-
-        const pointsSvg = values.map((v, i) => {
-            const x = left + (i / (values.length - 1 || 1)) * chartWidth;
-            const y = top + chartHeight - ((v - minValue) / range) * chartHeight;
-            return { x, y, v };
-        });
-
-        const pathData = pointsSvg.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
-
-        const ticksCount = 4;
-        const tickValues = Array.from({ length: ticksCount + 1 }, (_, i) => {
-            const v = minValue + (i / ticksCount) * range;
-            return Math.round(v);
-        });
-
-        // Calculate step for x-axis labels (show every Nth label)
-        const labelCount = labels.length;
-        let labelStep = 1;
-        if (labelCount > 20) labelStep = Math.ceil(labelCount / 6);
-        else if (labelCount > 10) labelStep = Math.ceil(labelCount / 5);
-
-        const containerRef = useRef(null);
-        const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: null, date: null });
-
-        const showTooltip = (ev, idx) => {
-            const rect = containerRef.current?.getBoundingClientRect();
-            const clientX = ev.clientX || ev.nativeEvent?.clientX || 0;
-            const clientY = ev.clientY || ev.nativeEvent?.clientY || 0;
-            const x = rect ? clientX - rect.left + 8 : clientX + 8;
-            const y = rect ? clientY - rect.top - 28 : clientY - 28;
-            const val = values[idx];
-            const date = pointsRaw[idx]?.date || pointsRaw[idx]?.activityDate || labels[idx];
-            setTooltip({ visible: true, x, y, value: val, date });
-        };
-
-        const moveTooltip = (ev) => {
-            if (!tooltip.visible) return;
-            const rect = containerRef.current?.getBoundingClientRect();
-            const clientX = ev.clientX || ev.nativeEvent?.clientX || 0;
-            const clientY = ev.clientY || ev.nativeEvent?.clientY || 0;
-            const x = rect ? clientX - rect.left + 8 : clientX + 8;
-            const y = rect ? clientY - rect.top - 28 : clientY - 28;
-            setTooltip((t) => ({ ...t, x, y }));
-        };
-
-        const hideTooltip = () => setTooltip({ visible: false, x: 0, y: 0, value: null, date: null });
-
-        return (
-            <div ref={containerRef} className="w-full overflow-x-auto relative" onMouseMove={moveTooltip} onMouseLeave={hideTooltip}>
-                <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-                    {tickValues.map((tv, idx) => {
-                        const y = top + (1 - (tv - minValue) / range) * chartHeight;
-                        return (
-                            <g key={idx}>
-                                <line x1={left} y1={y} x2={left + chartWidth} y2={y} stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3 3" />
-                                <text x={left - 8} y={y + 4} textAnchor="end" fill="#64748b" fontSize="11">{tv.toLocaleString()}</text>
-                            </g>
-                        );
-                    })}
-
-                    {labels.map((lbl, i) => {
-                        const shouldShow = i % labelStep === 0 || i === labels.length - 1;
-                        if (!shouldShow) return null;
-                        const x = left + (i / (labels.length - 1 || 1)) * chartWidth;
-                        return (
-                            <text key={i} x={x} y={height - bottom + 28} textAnchor="middle" fill="#64748b" fontSize="11" className="font-medium">
-                                {lbl}
-                            </text>
-                        );
-                    })}
-
-                    <path d={pathData} fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-
-                    <path d={`${pathData} L ${pointsSvg[pointsSvg.length - 1].x} ${top + chartHeight} L ${pointsSvg[0].x} ${top + chartHeight} Z`} fill="#10b981" opacity="0.12" />
-
-                    <defs>
-                        <linearGradient id="gradOnscreen" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-                            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                        </linearGradient>
-                    </defs>
-
-                    {pointsSvg.map((p, i) => (
-                        <g key={i}>
-                            <circle
-                                cx={p.x}
-                                cy={p.y}
-                                r="4"
-                                fill="#10b981"
-                                style={{ cursor: 'pointer' }}
-                                onMouseEnter={(e) => showTooltip(e, i)}
-                                onMouseMove={(e) => showTooltip(e, i)}
-                                onMouseLeave={hideTooltip}
-                            />
-                        </g>
-                    ))}
-                </svg>
-
-                {tooltip.visible && (
-                    <div style={{ left: tooltip.x, top: tooltip.y }} className="absolute z-50 pointer-events-none bg-white border px-2 py-1 rounded shadow text-xs">
-                        <div className="font-semibold">{tooltip.value?.toLocaleString?.() ?? tooltip.value}</div>
-                        <div className="text-[11px] text-slate-500">{tooltip.date}</div>
-                    </div>
-                )}
-            </div>
-        );
-    };
-
-    const labels = points.map((p) => {
-        try {
-            const d = new Date(p.activityDate);
-            return `${d.getDate()}/${d.getMonth() + 1}`;
-        } catch (e) {
-            return p.activityDate;
-        }
-    });
-
-    const values = points.map((p) => Number(p.totalActiveUsers) || 0);
-
-    // Chart 2: Average Time Per User
-    const avgTimeValues = points.map((p) => Math.round(Number(p.avgOnscreenSecondsPerUser) || 0));
-
-    // Sort points by date for charts
-    const sortedPoints = [...points].sort((a, b) => new Date(a.activityDate) - new Date(b.activityDate));
-
-    const sortedLabels = sortedPoints.map((p) => {
-        try {
-            const d = new Date(p.activityDate);
-            return `${d.getDate()}/${d.getMonth() + 1}`;
-        } catch (e) {
-            return p.activityDate;
-        }
-    });
-
-    const sortedValues = sortedPoints.map((p) => Number(p.totalActiveUsers) || 0);
-    const sortedAvgTimeValues = sortedPoints.map((p) => Math.round(Number(p.avgOnscreenSecondsPerUser) || 0));
-
-    // Prepare registration chart data
-    const regLabels = regPoints.map((p) => {
-        try {
-            const d = new Date(p.date);
-            return `${d.getDate()}`;
-        } catch (e) {
-            return p.date;
-        }
-    });
-    const regValues = regPoints.map((p) => p.newUserCount || 0);
-
-    // Chart 3: Active Users Last 7 Days (T2-CN, Nov 24-30, 2025)
-    const last7dPoints = points.filter((p) => {
-        const d = new Date(p.activityDate);
-        return d >= new Date(2025, 10, 24) && d <= new Date(2025, 10, 30);
-    }).sort((a, b) => new Date(a.activityDate) - new Date(b.activityDate));
-
-    const last7dLabels = last7dPoints.map((p) => {
-        const d = new Date(p.activityDate);
-        const days = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
-        return days[d.getDay()];
-    });
-
-    const last7dValues = last7dPoints.map((p) => Number(p.totalActiveUsers) || 0);
-
-    // Chart 4: Active Users Last 30 Days (Nov 1-30, 2025)
-    const last30dPoints = points.filter((p) => {
-        const d = new Date(p.activityDate);
-        return d >= new Date(2025, 10, 1) && d <= new Date(2025, 10, 30);
-    }).sort((a, b) => new Date(a.activityDate) - new Date(b.activityDate));
-
-    const last30dLabels = last30dPoints.map((p) => {
-        const d = new Date(p.activityDate);
-        return `${d.getDate()}`;
-    });
-
-    const last30dValues = last30dPoints.map((p) => Number(p.totalActiveUsers) || 0);
+    const last7Days = onscreenData.slice(-7);
+    const last30Days = onscreenData.slice(-30);
 
     return (
-        <div className="mt-3 border-t pt-3">
-            <h4 className="text-sm font-medium text-slate-700 mb-3">Onscreen Stats (Chatbox Activity)</h4>
+        <div className="p-6 bg-gray-50 min-h-screen">
+            <div className="max-w-7xl mx-auto">
+                {/* Tổng quan nhanh */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8">
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
+                        <p className="text-sm opacity-90">Tổng người dùng</p>
+                        <p className="text-3xl font-bold mt-1">{regLoading ? "..." : totalUsers?.toLocaleString() || "-"}</p>
+                    </div>
 
-            <div className="flex items-end justify-between mb-3 gap-3">
-                <div />
+                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
+                        <p className="text-sm opacity-90">Active Users (tất cả)</p>
+                        <p className="text-3xl font-bold mt-1">{loading ? "..." : totals.totalActiveAllTime?.toLocaleString() || "0"}</p>
+                    </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="text-center bg-slate-50 border rounded px-2 py-1">
-                        <div className="text-xs text-slate-500">Total Active (all time)</div>
-                        <div className="text-sm font-bold text-slate-900">{loading ? '...' : (totals.totalActiveUsersAllTime ?? '-')}</div>
+                    <div className="bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
+                        <p className="text-sm opacity-90">Tổng thời gian sử dụng</p>
+                        <p className="text-2xl font-bold mt-1 leading-tight">
+                            {loading ? "..." : formatSeconds(totals.totalSecondsAllTime)}
+                        </p>
                     </div>
-                    <div className="text-center bg-slate-50 border rounded px-2 py-1">
-                        <div className="text-xs text-slate-500">Total Onscreen Seconds</div>
-                        <div className="text-sm font-bold text-slate-900">
-                            {loading ? '...' : (totals.totalSystemOnscreenSecondsAllTime ? Math.round(totals.totalSystemOnscreenSecondsAllTime).toLocaleString() : '-')}
+
+                    <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
+                        <p className="text-sm opacity-90">Thời gian TB/người</p>
+                        <p className="text-2xl font-bold mt-1 leading-tight">
+                            {loading ? "..." : formatSeconds(totals.avgSecondsAllTime)}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                    {/* 1. Đăng ký mới (Bar Chart) */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-semibold text-gray-800">Người dùng đăng ký mới</h3>
+                            <div className="flex gap-2">
+                                <select value={selectedMonth} onChange={e => setSelectedMonth(+e.target.value)} className="text-sm border rounded-lg px-3 py-1.5">
+                                    {[...Array(12)].map((_, i) => <option key={i + 1} value={i + 1}>Tháng {i + 1}</option>)}
+                                </select>
+                                <select value={selectedYear} onChange={e => setSelectedYear(+e.target.value)} className="text-sm border rounded-lg px-3 py-1.5">
+                                    {[2025, 2024, 2023, 2022].map(y => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                            </div>
                         </div>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={regData}>
+                                <CartesianGrid strokeDasharray="4 4" stroke="#f0f0f0" />
+                                <XAxis dataKey="day" tick={{ fontSize: 12 }} />
+                                <YAxis tick={{ fontSize: 12 }} />
+                                <Tooltip formatter={(v) => `${v} người`} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                                <Bar dataKey="newUsers" fill="#3b82f6" radius={8} />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
-                    <div className="text-center bg-slate-50 border rounded px-2 py-1">
-                        <div className="text-xs text-slate-500">Avg sec/user</div>
-                        <div className="text-sm font-bold text-slate-900">
-                            {loading ? '...' : (totals.avgOnscreenSecondsPerUserAllTime ? Math.round(totals.avgOnscreenSecondsPerUserAllTime) : '-')}
-                        </div>
+
+                    {/* 2. Active Users + Thời gian trung bình */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users & Thời gian trung bình mỗi người</h3>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <ComposedChart data={onscreenData}>
+                                <CartesianGrid strokeDasharray="4 4" stroke="#f0f0f0" />
+                                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                                <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
+                                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
+                                <Legend />
+                                <Area yAxisId="left" type="monotone" dataKey="activeUsers" name="Active Users" stroke="#2563eb" fill="#dbeafe" strokeWidth={2} />
+                                <Line yAxisId="right" type="monotone" dataKey="avgSeconds" name="Thời gian trung bình" stroke="#f59e0b" strokeWidth={3} dot={{ r: 5 }} />
+                            </ComposedChart>
+                        </ResponsiveContainer>
                     </div>
-                    <div className="text-center bg-slate-50 border rounded px-2 py-1">
-                        <div className="text-xs text-slate-500">Total Users</div>
-                        <div className="text-sm font-bold text-slate-900">{regLoading ? '...' : (regTotalUsers ?? '-')}</div>
+
+                    {/* 3. 7 ngày gần nhất */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users - 7 ngày gần nhất</h3>
+                        <ResponsiveContainer width="100%" height={260}>
+                            <AreaChart data={last7Days}>
+                                <CartesianGrid strokeDasharray="4 4" />
+                                <XAxis dataKey="dayName" tick={{ fontSize: 14, fontWeight: "bold" }} />
+                                <YAxis />
+                                <Tooltip />
+                                <Area type="monotone" dataKey="activeUsers" stroke="#10b981" fill="#d1fae5" strokeWidth={3} />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </div>
+
+                    {/* 4. 30 ngày xu hướng */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Xu hướng Active Users - 30 ngày gần nhất</h3>
+                        <ResponsiveContainer width="100%" height={260}>
+                            <LineChart data={last30Days}>
+                                <CartesianGrid strokeDasharray="4 4" />
+                                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="activeUsers" stroke="#8b5cf6" strokeWidth={4} dot={{ r: 6 }} activeDot={{ r: 8 }} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                <div className="mt-8 text-center text-xs text-gray-500">
+                    Cập nhật lúc: {format(new Date(), "dd/MM/yyyy HH:mm")}
                 </div>
             </div>
-
-            {loading ? (
-                <div className="text-xs text-slate-500">Đang tải dữ liệu onscreen...</div>
-            ) : error ? (
-                <div className="text-xs text-rose-600">Lỗi: {error}</div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {/* Chart 0: Daily New Users Registration */}
-                    <div className="border rounded-lg p-2">
-                        <div className="flex items-start justify-between">
-                            <h5 className="text-xs font-semibold text-slate-700 mb-1">Số người đăng ký theo ngày (Tháng {selectedMonth}/{selectedYear})</h5>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <div>
-                                <select
-                                    value={selectedMonth}
-                                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                                    className="border rounded px-2 py-1 text-xs"
-                                >
-                                    {Array.from({ length: 12 }).map((_, idx) => (
-                                        <option key={idx} value={idx + 1}>Tháng {idx + 1}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <select
-                                    value={selectedYear}
-                                    onChange={(e) => setSelectedYear(Number(e.target.value))}
-                                    className="border rounded px-2 py-1 text-xs"
-                                >
-                                    {Array.from({ length: 6 }).map((_, idx) => {
-                                        const y = now.getFullYear() - idx;
-                                        return <option key={y} value={y}>{y}</option>;
-                                    })}
-                                </select>
-                            </div>
-                        </div>
-                        {regLoading ? (
-                            <div className="text-xs text-slate-500">Đang tải dữ liệu...</div>
-                        ) : regError ? (
-                            <div className="text-xs text-rose-600">Lỗi: {regError}</div>
-                        ) : regValues.length > 0 ? (
-                            <LineChart labels={regLabels} values={regValues} pointsRaw={regPoints} />
-                        ) : (
-                            <div className="text-xs text-slate-500">Không có dữ liệu</div>
-                        )}
-                    </div>
-
-                    {/* Chart 1: Active Users (All Data) */}
-                    <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-12">Active Users - Thời gian tính (All Data)</h5>
-                        {/* <div className="flex items-center gap-2 mb-2">
-                            <div>
-                                <label className="text-[11px] text-slate-500 block">Start date</label>
-                                <input
-                                    type="date"
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="border rounded px-2 py-1 text-xs"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-[11px] text-slate-500 block">Max weeks</label>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={52}
-                                    value={maxWeeks}
-                                    onChange={(e) => setMaxWeeks(Number(e.target.value))}
-                                    className="w-20 border rounded px-2 py-1 text-xs"
-                                />
-                            </div>
-
-                            <button
-                                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium"
-                                onClick={fetchOnscreen}
-                            >
-                                Áp dụng
-                            </button>
-                        </div> */}
-                        <LineChart labels={sortedLabels} values={sortedValues} pointsRaw={sortedPoints} />
-                    </div>
-
-                    {/* Chart 2: Average Time Per User */}
-                    <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-12">Average Time per User (seconds)</h5>
-                        <LineChart labels={sortedLabels} values={sortedAvgTimeValues} pointsRaw={sortedPoints} />
-                    </div>
-
-                    {/* Chart 3: Active Users Last 7 Days (Nov 24-30) */}
-                    <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-1">Active Users - Last 7 Days (T2-CN, Nov 24-30)</h5>
-                        {last7dValues.length > 0 ? (
-                            <LineChart labels={last7dLabels} values={last7dValues} pointsRaw={last7dPoints} />
-                        ) : (
-                            <div className="text-xs text-slate-500">Không có dữ liệu</div>
-                        )}
-                    </div>
-                    {/* Chart 4: Active Users Last 30 Days (Nov 1-30) */}
-                    <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-1">Active Users - Last 30 Days (Nov 1-30)</h5>
-                        {last30dValues.length > 0 ? (
-                            <LineChart labels={last30dLabels} values={last30dValues} pointsRaw={last30dPoints} />
-                        ) : (
-                            <div className="text-xs text-slate-500">Không có dữ liệu</div>
-                        )}
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
