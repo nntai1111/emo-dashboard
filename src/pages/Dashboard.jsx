@@ -6,6 +6,7 @@ import { authService } from "../services/authService";
 import { paymentsService } from "../services/apiService";
 import PostService from "../components/charts/PostService";
 import ChatService from "../components/charts/ChatService";
+import BehaviorMock from "../components/charts/BehaviorMock";
 import DailyPaymentsChart from "../components/charts/DailyPaymentsChart";
 
 const Dashboard = () => {
@@ -15,6 +16,7 @@ const Dashboard = () => {
     const [paymentsSummary, setPaymentsSummary] = useState({ totalCount: 0 });
     const [paymentsData, setPaymentsData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('behavior');
 
     const handleLogout = async () => {
         try {
@@ -28,24 +30,22 @@ const Dashboard = () => {
         }
     };
 
-    // Load completed payments
+    // Load completed payments only when revenue tab is active
     useEffect(() => {
         let mounted = true;
 
         const loadPayments = async () => {
             try {
                 setLoading(true);
-                // Gọi API với status=Completed để lấy tất cả giao dịch thành công
                 const res = await paymentsService.getPayments({
                     pageIndex: 1,
-                    pageSize: 1000, // Lấy nhiều để đủ dữ liệu vẽ chart
+                    pageSize: 1000,
                     status: "Completed",
                     sortOrder: "desc",
                 });
 
                 if (!mounted) return;
 
-                // Xử lý nhiều cấu trúc response có thể có
                 const data = res?.payments?.data || res?.data || res || [];
                 const totalCount = res?.payments?.totalCount || res?.totalCount || data.length;
 
@@ -58,9 +58,12 @@ const Dashboard = () => {
             }
         };
 
-        loadPayments();
+        if (activeTab === 'revenue') {
+            loadPayments();
+        }
+
         return () => { mounted = false; };
-    }, []);
+    }, [activeTab]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -85,47 +88,100 @@ const Dashboard = () => {
                 </div >
             </header >
 
-            {/* Main Content */}
-            < main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8" >
-
-                {/* Payments Daily Chart */}
-                <div div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8" >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                        <h2 className="text-xl font-bold text-slate-900">Doanh thu & lượt mua theo ngày</h2>
-                        <div className="text-sm text-slate-600 mt-2 sm:mt-0">
-                            Tổng người mua gói: <span className="font-bold text-rose-600 text-lg">{paymentsSummary.totalCount}</span>
+            {/* Main Content with Tabs */}
+            <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-bold text-slate-900">Bảng điều khiển thống kê</h2>
+                        <div className="text-sm text-slate-600">
+                            Xin chào, <span className="font-semibold text-slate-800">{user?.displayName || user?.email || 'Quản trị'}</span>
                         </div>
                     </div>
-                    <DailyPaymentsChart payments={paymentsData} />
-                </div >
-                {/* Cohort Retention */}
-                <div div className="mt-12" >
-                    <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center">
-                        Phân tích Retention theo Cohort tuần
-                    </h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-                            <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-5">
-                                <h3 className="text-lg font-bold">Bài viết (Post)</h3>
-                                <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại xem bài</p>
-                            </div>
-                            <div className="">
-                                <PostService maxWeeksOverride={6} compact />
-                            </div>
-                        </div>
 
-                        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-                            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-5">
-                                <h3 className="text-lg font-bold">Chatbot AI</h3>
-                                <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại chat</p>
-                            </div>
-                            <div className="">
-                                <ChatService maxWeeksOverride={6} compact />
-                            </div>
-                        </div>
+                    {/* Tabs */}
+                    <div className="border-b border-slate-100 mb-6">
+                        <nav className="flex space-x-2" role="tablist" aria-label="Dashboard tabs">
+                            <button
+                                role="tab"
+                                aria-selected={activeTab === 'behavior'}
+                                onClick={() => setActiveTab('behavior')}
+                                className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'behavior' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                User Behavior Analysis
+                            </button>
+
+                            <button
+                                role="tab"
+                                aria-selected={activeTab === 'cohort'}
+                                onClick={() => setActiveTab('cohort')}
+                                className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'cohort' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                Cohort
+                            </button>
+
+                            <button
+                                role="tab"
+                                aria-selected={activeTab === 'revenue'}
+                                onClick={() => setActiveTab('revenue')}
+                                className={`px-4 py-2 rounded-md text-sm font-medium ${activeTab === 'revenue' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                            >
+                                Doanh thu
+                            </button>
+                        </nav>
                     </div>
-                </div >
-            </main >
+
+                    {/* Tab Panels */}
+                    <div>
+                        {activeTab === 'behavior' && (
+                            <div>
+                                <h3 className="text-lg font-semibold text-slate-800 mb-4">User Behavior Analysis</h3>
+                                <BehaviorMock />
+                            </div>
+                        )}
+
+                        {activeTab === 'cohort' && (
+                            <div>
+                                <h3 className="text-lg font-semibold text-slate-800 mb-4">Cohort Retention</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-5">
+                                            <h3 className="text-lg font-bold">Bài viết (Post)</h3>
+                                            <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại xem bài</p>
+                                        </div>
+                                        <div className="p-4">
+                                            <PostService />
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-5">
+                                            <h3 className="text-lg font-bold">Chatbot AI</h3>
+                                            <p className="text-xs opacity-90 mt-1">Tỷ lệ người dùng quay lại chat</p>
+                                        </div>
+                                        <div className="p-4">
+                                            <ChatService />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'revenue' && (
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-semibold text-slate-800">Doanh thu & lượt mua theo ngày</h3>
+                                    <div className="text-sm text-slate-600">
+                                        Tổng người mua gói: <span className="font-bold text-rose-600 text-lg">{paymentsSummary.totalCount}</span>
+                                    </div>
+                                </div>
+                                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                                    <DailyPaymentsChart payments={paymentsData} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </main>
         </div >
     );
 };
