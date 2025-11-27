@@ -84,6 +84,12 @@ const OnscreenStats = () => {
             return Math.round(v);
         });
 
+        // Calculate step for x-axis labels (show every Nth label)
+        const labelCount = labels.length;
+        let labelStep = 1;
+        if (labelCount > 20) labelStep = Math.ceil(labelCount / 6);
+        else if (labelCount > 10) labelStep = Math.ceil(labelCount / 5);
+
         const containerRef = useRef(null);
         const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, value: null, date: null });
 
@@ -124,6 +130,8 @@ const OnscreenStats = () => {
                     })}
 
                     {labels.map((lbl, i) => {
+                        const shouldShow = i % labelStep === 0 || i === labels.length - 1;
+                        if (!shouldShow) return null;
                         const x = left + (i / (labels.length - 1 || 1)) * chartWidth;
                         return (
                             <text key={i} x={x} y={height - bottom + 28} textAnchor="middle" fill="#64748b" fontSize="11" className="font-medium">
@@ -182,6 +190,21 @@ const OnscreenStats = () => {
 
     // Chart 2: Average Time Per User
     const avgTimeValues = points.map((p) => Math.round(Number(p.avgOnscreenSecondsPerUser) || 0));
+
+    // Sort points by date for charts
+    const sortedPoints = [...points].sort((a, b) => new Date(a.activityDate) - new Date(b.activityDate));
+    
+    const sortedLabels = sortedPoints.map((p) => {
+        try {
+            const d = new Date(p.activityDate);
+            return `${d.getDate()}/${d.getMonth() + 1}`;
+        } catch (e) {
+            return p.activityDate;
+        }
+    });
+
+    const sortedValues = sortedPoints.map((p) => Number(p.totalActiveUsers) || 0);
+    const sortedAvgTimeValues = sortedPoints.map((p) => Math.round(Number(p.avgOnscreenSecondsPerUser) || 0));
 
     // Chart 3: Active Users Last 7 Days (T2-CN, Nov 24-30, 2025)
     const last7dPoints = points.filter((p) => {
@@ -275,13 +298,13 @@ const OnscreenStats = () => {
                     {/* Chart 1: Active Users (All Data) */}
                     <div className="border rounded-lg p-3">
                         <h5 className="text-xs font-semibold text-slate-700 mb-2">Active Users - Thời gian tính (All Data)</h5>
-                        <LineChart labels={labels} values={values} pointsRaw={points} />
+                        <LineChart labels={sortedLabels} values={sortedValues} pointsRaw={sortedPoints} />
                     </div>
 
                     {/* Chart 2: Average Time Per User */}
                     <div className="border rounded-lg p-3">
                         <h5 className="text-xs font-semibold text-slate-700 mb-2">Average Time per User (seconds)</h5>
-                        <LineChart labels={labels} values={avgTimeValues} pointsRaw={points} />
+                        <LineChart labels={sortedLabels} values={sortedAvgTimeValues} pointsRaw={sortedPoints} />
                     </div>
 
                     {/* Chart 3: Active Users Last 7 Days (Nov 24-30) */}
