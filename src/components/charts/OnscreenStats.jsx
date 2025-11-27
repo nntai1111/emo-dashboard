@@ -4,22 +4,19 @@ import {
     AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
     Tooltip, Legend, ResponsiveContainer, ComposedChart
 } from "recharts";
+import RetentionChart from "./RetentionChart";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 
-// Hàm chuyển giây → định dạng đẹp (giờ + phút + giây)
 const formatSeconds = (totalSeconds) => {
     if (!totalSeconds || totalSeconds < 0) return "0 giây";
     const secs = Math.round(totalSeconds);
-
     if (secs < 60) return `${secs} giây`;
 
     const minutes = Math.floor(secs / 60);
     const seconds = secs % 60;
 
     if (minutes < 60) {
-        return seconds > 0
-            ? `${minutes} phút ${seconds} giây`
-            : `${minutes} phút`;
+        return seconds > 0 ? `${minutes} phút ${seconds} giây` : `${minutes} phút`;
     }
 
     const hours = Math.floor(minutes / 60);
@@ -30,7 +27,6 @@ const formatSeconds = (totalSeconds) => {
     return `${hours} giờ ${mins} phút ${seconds} giây`;
 };
 
-// Tooltip tùy chỉnh để hiển thị thời gian đẹp
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
         return (
@@ -56,6 +52,9 @@ const OnscreenStats = () => {
     const [totalUsers, setTotalUsers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [regLoading, setRegLoading] = useState(true);
+    const [retentionData, setRetentionData] = useState([]);
+    const [retentionLoading, setRetentionLoading] = useState(true);
+    const [retentionError, setRetentionError] = useState(null);
 
     const now = new Date();
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
@@ -144,31 +143,51 @@ const OnscreenStats = () => {
         fetchRegistration();
     }, [selectedYear, selectedMonth]);
 
+    useEffect(() => {
+        const fetchRetention = async () => {
+            setRetentionLoading(true);
+            try {
+                const token = await tokenManager.ensureValidToken();
+                const resp = await fetch("https://api.emoease.vn/chatbox-service/api/AIChat/dashboard/retention-curve?weeks=4", {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (!resp.ok) throw new Error("Lỗi tải dữ liệu retention curve");
+                const data = await resp.json();
+                setRetentionData(Array.isArray(data) ? data : []);
+                setRetentionError(null);
+            } catch (err) {
+                console.error(err);
+                setRetentionError(err.message || String(err));
+            } finally {
+                setRetentionLoading(false);
+            }
+        };
+        fetchRetention();
+    }, []);
+
     const last7Days = onscreenData.slice(-7);
     const last30Days = onscreenData.slice(-30);
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
             <div className="max-w-7xl mx-auto">
+
                 {/* Tổng quan nhanh */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8">
                     <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
                         <p className="text-sm opacity-90">Tổng người dùng</p>
                         <p className="text-3xl font-bold mt-1">{regLoading ? "..." : totalUsers?.toLocaleString() || "-"}</p>
                     </div>
-
                     <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
                         <p className="text-sm opacity-90">Active Users (tất cả)</p>
                         <p className="text-3xl font-bold mt-1">{loading ? "..." : totals.totalActiveAllTime?.toLocaleString() || "0"}</p>
                     </div>
-
                     <div className="bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
                         <p className="text-sm opacity-90">Tổng thời gian sử dụng</p>
                         <p className="text-2xl font-bold mt-1 leading-tight">
                             {loading ? "..." : formatSeconds(totals.totalSecondsAllTime)}
                         </p>
                     </div>
-
                     <div className="bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition">
                         <p className="text-sm opacity-90">Thời gian TB/người</p>
                         <p className="text-2xl font-bold mt-1 leading-tight">
@@ -177,8 +196,9 @@ const OnscreenStats = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
-                    {/* 1. Đăng ký mới (Bar Chart) */}
+                {/* HÀNG 1: 3 CHART ĐẦU - ĐĂNG KÝ MỚI | ACTIVE + TGIAN | RETENTION */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    {/* 1. Đăng ký mới */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-semibold text-gray-800">Người dùng đăng ký mới</h3>
@@ -204,7 +224,7 @@ const OnscreenStats = () => {
 
                     {/* 2. Active Users + Thời gian trung bình */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users & Thời gian trung bình mỗi người</h3>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users & Thời gian trung bình</h3>
                         <ResponsiveContainer width="100%" height={300}>
                             <ComposedChart data={onscreenData}>
                                 <CartesianGrid strokeDasharray="4 4" stroke="#f0f0f0" />
@@ -219,10 +239,26 @@ const OnscreenStats = () => {
                         </ResponsiveContainer>
                     </div>
 
-                    {/* 3. 7 ngày gần nhất */}
+
+                </div>
+
+                {/* HÀNG 2: 2 CHART CUỐI */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* 3. RETENTION CURVE - ĐÃ LÊN TOP 3 */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 ">
+                        <h3 className="text-lg font-semibold text-gray-800 p-6">Retention Curve (4 tuần)</h3>
+                        {retentionLoading ? (
+                            <div className="text-sm text-slate-600 py-8">Đang tải dữ liệu...</div>
+                        ) : retentionError ? (
+                            <div className="text-sm text-red-600 py-8">Lỗi: {retentionError}</div>
+                        ) : (
+                            <RetentionChart data={retentionData} height={300} />
+                        )}
+                    </div>
+                    {/* 4. Active Users 7 ngày gần nhất */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users - 7 ngày gần nhất</h3>
-                        <ResponsiveContainer width="100%" height={260}>
+                        <ResponsiveContainer width="100%" height={280}>
                             <AreaChart data={last7Days}>
                                 <CartesianGrid strokeDasharray="4 4" />
                                 <XAxis dataKey="dayName" tick={{ fontSize: 14, fontWeight: "bold" }} />
@@ -233,10 +269,10 @@ const OnscreenStats = () => {
                         </ResponsiveContainer>
                     </div>
 
-                    {/* 4. 30 ngày xu hướng */}
+                    {/* 5. Xu hướng 30 ngày */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4">Xu hướng Active Users - 30 ngày gần nhất</h3>
-                        <ResponsiveContainer width="100%" height={260}>
+                        <ResponsiveContainer width="100%" height={280}>
                             <LineChart data={last30Days}>
                                 <CartesianGrid strokeDasharray="4 4" />
                                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
@@ -248,7 +284,7 @@ const OnscreenStats = () => {
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-xs text-gray-500">
+                <div className="mt-10 text-center text-xs text-gray-500">
                     Cập nhật lúc: {format(new Date(), "dd/MM/yyyy HH:mm")}
                 </div>
             </div>

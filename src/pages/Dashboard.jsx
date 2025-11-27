@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LogOut, User, Users, DollarSign, TrendingUp, BarChart3, ShoppingCart } from "lucide-react";
 import { authService } from "../services/authService";
 import { paymentsService } from "../services/apiService";
+// retention chart moved to OnscreenStats
 import PostService from "../components/charts/PostService";
 import ChatService from "../components/charts/ChatService";
 import BehaviorMock from "../components/charts/BehaviorMock";
@@ -64,6 +65,8 @@ const Dashboard = () => {
 
         return () => { mounted = false; };
     }, [activeTab]);
+
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -130,6 +133,7 @@ const Dashboard = () => {
                         {activeTab === 'behavior' && (
                             <div>
                                 <BehaviorMock />
+
                             </div>
                         )}
 
