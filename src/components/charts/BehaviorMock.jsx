@@ -225,54 +225,6 @@ const BehaviorMock = ({ year: propYear, month: propMonth }) => {
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-            <div className="flex items-start justify-between mb-3">
-                <div>
-                    <h4 className="text-sm font-medium text-slate-700">Số người đăng ký theo ngày</h4>
-                    <div className="text-xs text-slate-500 mt-1">Tháng {selectedMonth}/{selectedYear}</div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <div className="bg-slate-50 border rounded px-3 py-2 text-right">
-                        <div className="text-xs text-slate-500">Tổng người dùng</div>
-                        <div className="text-lg font-bold text-slate-900">{loading ? "..." : (totalUsers !== null ? totalUsers.toLocaleString() : "-")}</div>
-                        <div className="text-[11px] text-slate-400">Cập nhật: {points.length ? points[points.length - 1]?.date : "-"}</div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <select
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                            className="border rounded px-2 py-1 text-sm bg-white"
-                        >
-                            {monthNames.map((m, idx) => (
-                                <option key={idx} value={idx + 1}>{m}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={selectedYear}
-                            onChange={(e) => setSelectedYear(Number(e.target.value))}
-                            className="border rounded px-2 py-1 text-sm bg-white"
-                        >
-                            {years.map((y) => (
-                                <option key={y} value={y}>{y}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            {loading ? (
-                <div className="text-sm text-slate-500">Đang tải dữ liệu...</div>
-            ) : error ? (
-                <div className="text-sm text-rose-600">Lỗi: {error}</div>
-            ) : (
-                <div>
-                    <LineChart labels={chartData.labels} values={chartData.values} pointsRaw={points} />
-                </div>
-            )}
-
-            <div className="mt-4 text-sm text-slate-600">Dữ liệu từ `profile-service`</div>
 
             {/* Onscreen Stats Section */}
             <OnscreenStats />
