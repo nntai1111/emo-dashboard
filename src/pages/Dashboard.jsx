@@ -89,14 +89,9 @@ const Dashboard = () => {
             </header >
 
             {/* Main Content with Tabs */}
-            <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold text-slate-900">Bảng điều khiển thống kê</h2>
-                        <div className="text-sm text-slate-600">
-                            Xin chào, <span className="font-semibold text-slate-800">{user?.displayName || user?.email || 'Quản trị'}</span>
-                        </div>
-                    </div>
+
 
                     {/* Tabs */}
                     <div className="border-b border-slate-100 mb-6">
