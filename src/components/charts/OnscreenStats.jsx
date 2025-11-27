@@ -319,63 +319,7 @@ const OnscreenStats = () => {
             <h4 className="text-sm font-medium text-slate-700 mb-3">Onscreen Stats (Chatbox Activity)</h4>
 
             <div className="flex items-end justify-between mb-3 gap-3">
-                <div className="flex items-end gap-2">
-                    <div>
-                        <label className="text-xs text-slate-500 block mb-1">Start date</label>
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            className="border rounded px-2 py-1 text-xs"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-slate-500 block mb-1">Max weeks</label>
-                        <input
-                            type="number"
-                            min={1}
-                            max={52}
-                            value={maxWeeks}
-                            onChange={(e) => setMaxWeeks(Number(e.target.value))}
-                            className="w-20 border rounded px-2 py-1 text-xs"
-                        />
-                    </div>
-
-                    <button
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium"
-                        onClick={fetchOnscreen}
-                    >
-                        Áp dụng
-                    </button>
-
-                    <div>
-                        <label className="text-xs text-slate-500 block mb-1">Reg Month</label>
-                        <select
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                            className="border rounded px-2 py-1 text-xs"
-                        >
-                            {Array.from({ length: 12 }).map((_, idx) => (
-                                <option key={idx} value={idx + 1}>Tháng {idx + 1}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-slate-500 block mb-1">Reg Year</label>
-                        <select
-                            value={selectedYear}
-                            onChange={(e) => setSelectedYear(Number(e.target.value))}
-                            className="border rounded px-2 py-1 text-xs"
-                        >
-                            {Array.from({ length: 6 }).map((_, idx) => {
-                                const y = now.getFullYear() - idx;
-                                return <option key={y} value={y}>{y}</option>;
-                            })}
-                        </select>
-                    </div>
-                </div>
+                <div />
 
                 <div className="flex items-center gap-3">
                     <div className="text-center bg-slate-50 border rounded px-2 py-1">
@@ -406,10 +350,38 @@ const OnscreenStats = () => {
             ) : error ? (
                 <div className="text-xs text-rose-600">Lỗi: {error}</div>
             ) : (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* Chart 0: Daily New Users Registration */}
                     <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-1">Số người đăng ký theo ngày (Tháng {selectedMonth}/{selectedYear})</h5>
+                        <div className="flex items-start justify-between">
+                            <h5 className="text-xs font-semibold text-slate-700 mb-1">Số người đăng ký theo ngày (Tháng {selectedMonth}/{selectedYear})</h5>
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div>
+                                <select
+                                    value={selectedMonth}
+                                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                                    className="border rounded px-2 py-1 text-xs"
+                                >
+                                    {Array.from({ length: 12 }).map((_, idx) => (
+                                        <option key={idx} value={idx + 1}>Tháng {idx + 1}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <select
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                                    className="border rounded px-2 py-1 text-xs"
+                                >
+                                    {Array.from({ length: 6 }).map((_, idx) => {
+                                        const y = now.getFullYear() - idx;
+                                        return <option key={y} value={y}>{y}</option>;
+                                    })}
+                                </select>
+                            </div>
+                        </div>
                         {regLoading ? (
                             <div className="text-xs text-slate-500">Đang tải dữ liệu...</div>
                         ) : regError ? (
@@ -423,13 +395,43 @@ const OnscreenStats = () => {
 
                     {/* Chart 1: Active Users (All Data) */}
                     <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-1">Active Users - Thời gian tính (All Data)</h5>
+                        <h5 className="text-xs font-semibold text-slate-700 mb-12">Active Users - Thời gian tính (All Data)</h5>
+                        {/* <div className="flex items-center gap-2 mb-2">
+                            <div>
+                                <label className="text-[11px] text-slate-500 block">Start date</label>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="border rounded px-2 py-1 text-xs"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-[11px] text-slate-500 block">Max weeks</label>
+                                <input
+                                    type="number"
+                                    min={1}
+                                    max={52}
+                                    value={maxWeeks}
+                                    onChange={(e) => setMaxWeeks(Number(e.target.value))}
+                                    className="w-20 border rounded px-2 py-1 text-xs"
+                                />
+                            </div>
+
+                            <button
+                                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium"
+                                onClick={fetchOnscreen}
+                            >
+                                Áp dụng
+                            </button>
+                        </div> */}
                         <LineChart labels={sortedLabels} values={sortedValues} pointsRaw={sortedPoints} />
                     </div>
 
                     {/* Chart 2: Average Time Per User */}
                     <div className="border rounded-lg p-2">
-                        <h5 className="text-xs font-semibold text-slate-700 mb-1">Average Time per User (seconds)</h5>
+                        <h5 className="text-xs font-semibold text-slate-700 mb-12">Average Time per User (seconds)</h5>
                         <LineChart labels={sortedLabels} values={sortedAvgTimeValues} pointsRaw={sortedPoints} />
                     </div>
 
