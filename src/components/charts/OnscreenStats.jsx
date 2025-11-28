@@ -264,9 +264,9 @@ const OnscreenStats = () => {
                 </div>
 
                 {/* HÀNG 2: 2 CHART CUỐI */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* 3. RETENTION CURVE - ĐÃ LÊN TOP 3 */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 ">
+                    {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2 ">
                         <h3 className="text-lg font-semibold text-gray-800 p-6">Retention Curve (4 tuần)</h3>
                         {retentionLoading ? (
                             <div className="text-sm text-slate-600 py-8">Đang tải dữ liệu...</div>
@@ -275,10 +275,10 @@ const OnscreenStats = () => {
                         ) : (
                             <RetentionChart data={retentionData} height={300} />
                         )}
-                    </div>
+                    </div> */}
                     {/* 4. Active Users 7 ngày gần nhất */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users - 7 ngày gần nhất</h3>
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 pr-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4 py-6 pl-6">Active Users - 7 ngày gần nhất</h3>
                         <ResponsiveContainer width="100%" height={280}>
                             <AreaChart data={last7Days}>
                                 <CartesianGrid strokeDasharray="4 4" />
@@ -291,8 +291,8 @@ const OnscreenStats = () => {
                     </div>
 
                     {/* 5. Xu hướng 30 ngày */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Xu hướng Active Users - 30 ngày gần nhất</h3>
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 pr-6">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4 py-6 pl-6">Xu hướng Active Users - 30 ngày gần nhất</h3>
                         <ResponsiveContainer width="100%" height={280}>
                             <LineChart data={last30Days}>
                                 <CartesianGrid strokeDasharray="4 4" />
