@@ -71,13 +71,19 @@ const OnscreenStats = () => {
             const data = await resp.json();
 
             const sorted = (data.points || [])
-                .map(p => ({
-                    date: format(new Date(p.activityDate), "dd/MM"),
-                    dayName: format(new Date(p.activityDate), "EEE"),
-                    activeUsers: Number(p.totalActiveUsers) || 0,
-                    avgSeconds: Number(p.avgOnscreenSecondsPerUser) || 0,
-                }))
-                .sort((a, b) => a.date.localeCompare(b.date));
+                .map(p => {
+                    const d = new Date(p.activityDate);
+                    return {
+                        date: format(d, "dd/MM"),
+                        dayName: format(d, "EEE"),
+                        activeUsers: Number(p.totalActiveUsers) || 0,
+                        avgSeconds: Number(p.avgOnscreenSecondsPerUser) || 0,
+                        ts: d.getTime(),
+                        month: d.getMonth() + 1,
+                        year: d.getFullYear(),
+                    };
+                })
+                .sort((a, b) => a.ts - b.ts);
 
             setOnscreenData(sorted);
             setTotals({
@@ -165,8 +171,11 @@ const OnscreenStats = () => {
         fetchRetention();
     }, []);
 
-    const last7Days = onscreenData.slice(-7);
-    const last30Days = onscreenData.slice(-30);
+    // Filter onscreen data by the selected month & year (same controls as registration)
+    const filteredOnscreen = onscreenData.filter(d => d.month === selectedMonth && d.year === selectedYear);
+
+    const last7Days = filteredOnscreen.slice(-7);
+    const last30Days = filteredOnscreen.slice(-30);
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -224,9 +233,19 @@ const OnscreenStats = () => {
 
                     {/* 2. Active Users + Thời gian trung bình */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Active Users & Thời gian trung bình</h3>
+                        <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-lg font-semibold text-gray-800">Active Users & Thời gian trung bình</h3>
+                            <div className="flex gap-2 items-center">
+                                <select value={selectedMonth} onChange={e => setSelectedMonth(+e.target.value)} className="text-sm border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                    {[...Array(12)].map((_, i) => <option key={i + 1} value={i + 1}>Tháng {i + 1}</option>)}
+                                </select>
+                                <select value={selectedYear} onChange={e => setSelectedYear(+e.target.value)} className="text-sm border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                    {[2025, 2024, 2023, 2022].map(y => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                            </div>
+                        </div>
                         <ResponsiveContainer width="100%" height={300}>
-                            <ComposedChart data={onscreenData}>
+                            <ComposedChart data={filteredOnscreen}>
                                 <CartesianGrid strokeDasharray="4 4" stroke="#f0f0f0" />
                                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                                 <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
