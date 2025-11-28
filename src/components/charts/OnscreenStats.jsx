@@ -34,9 +34,9 @@ const CustomTooltip = ({ active, payload, label }) => {
                 <p className="font-medium text-gray-800">{label}</p>
                 {payload.map((entry, i) => (
                     <p key={i} style={{ color: entry.color }}>
-                        {entry.name === "Giây trung bình"
-                            ? `${entry.name}: ${formatSeconds(entry.value)}`
-                            : `${entry.name}: ${entry.value.toLocaleString()} ${entry.name.includes("Users") ? "người" : ""}`}
+                        {entry.name && entry.name.includes("Thời gian")
+                            ? `${entry.name}: ${Number(entry.value).toLocaleString()} phút`
+                            : `${entry.name}: ${entry.value.toLocaleString()} ${entry.name && entry.name.includes("Users") ? "người" : ""}`}
                     </p>
                 ))}
             </div>
@@ -73,11 +73,13 @@ const OnscreenStats = () => {
             const sorted = (data.points || [])
                 .map(p => {
                     const d = new Date(p.activityDate);
+                    const avgSec = Number(p.avgOnscreenSecondsPerUser) || 0;
                     return {
                         date: format(d, "dd/MM"),
                         dayName: format(d, "EEE"),
                         activeUsers: Number(p.totalActiveUsers) || 0,
-                        avgSeconds: Number(p.avgOnscreenSecondsPerUser) || 0,
+                        avgSeconds: avgSec,
+                        avgMinutes: avgSec / 60,
                         ts: d.getTime(),
                         month: d.getMonth() + 1,
                         year: d.getFullYear(),
@@ -253,7 +255,7 @@ const OnscreenStats = () => {
                                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
                                 <Legend />
                                 <Area yAxisId="left" type="monotone" dataKey="activeUsers" name="Active Users" stroke="#2563eb" fill="#dbeafe" strokeWidth={2} />
-                                <Line yAxisId="right" type="monotone" dataKey="avgSeconds" name="Thời gian trung bình" stroke="#f59e0b" strokeWidth={3} dot={{ r: 5 }} />
+                                <Line yAxisId="right" type="monotone" dataKey="avgMinutes" name="Thời gian trung bình (phút)" stroke="#f59e0b" strokeWidth={3} dot={{ r: 5 }} />
                             </ComposedChart>
                         </ResponsiveContainer>
                     </div>
